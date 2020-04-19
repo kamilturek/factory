@@ -27,9 +27,15 @@ jobs:
         cmake ..
     - name: Run clang-tidy
       run: ./scripts/clang-tidy.sh .
+  cppcheck:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run cppcheck
+      run: ./scripts/cppcheck.sh .
   shellcheck:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Run shellcheck
-      run: shellcheck scripts/*
+      run: shellcheck scripts/*.sh
