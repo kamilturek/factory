@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.15)
 
 project(factory CXX)
 
+# Build type
+include(cmake/BuildType.cmake)
+
 # Compiler warnings
 add_library(warnings INTERFACE)
 include(cmake/CompilerWarnings.cmake)
