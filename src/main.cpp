@@ -1,4 +1,3 @@
-#include "Car.hpp"
 #include "Factory.hpp"
 
 void run()
