@@ -18,6 +18,8 @@ enable_sanitizers(sanitizers)
 # Compile command database for clang-tidy
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(factory src/main.cpp)
+include_directories(include)
+
+add_executable(factory src/main.cpp src/Factory.cpp)
 target_link_libraries(factory PRIVATE warnings sanitizers)
 target_compile_features(factory PRIVATE cxx_std_17)
