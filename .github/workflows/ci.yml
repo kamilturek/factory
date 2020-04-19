@@ -14,3 +14,9 @@ jobs:
       run: |
         cd build
         make
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run clang-tidy
+      run: ./scripts/clang-tidy.sh .
