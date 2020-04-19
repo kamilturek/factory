@@ -8,4 +8,4 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-cmake-format "$1/CMakeLists.txt" -o "$1/CMakeLists.txt
+cmake-format "$1/CMakeLists.txt" -o "$1/CMakeLists.txt"
