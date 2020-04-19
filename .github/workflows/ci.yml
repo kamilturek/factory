@@ -1,0 +1,35 @@
+name: CI
+on: [ push, pull_request ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run cmake
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+    - name: Run make
+      run: |
+        cd build
+        make
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install clang-tidy
+      run: sudo apt-get install clang-tidy
+    - name: Generate compile command database
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+    - name: Run clang-tidy
+      run: ./scripts/clang-tidy.sh .
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run shellcheck
+      run: shellcheck scripts/*

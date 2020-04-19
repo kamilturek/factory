@@ -8,4 +8,4 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-clang-tidy -p "$1/build/" --extra-arg=-Wno-unknown-warning-option "$1/src/*"
+clang-tidy -p "$1/build/" --extra-arg=-Wno-unknown-warning-option "$1/src/"*
