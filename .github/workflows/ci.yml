@@ -11,4 +11,6 @@ jobs:
         cd build
         cmake ..
     - name: Run make
-      run: make
+      run: |
+        ls -al
+        make
