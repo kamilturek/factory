@@ -1,8 +1,9 @@
+#include "UI.hpp"
 #include "Factory.hpp"
 
 void run()
 {
-    Factory factory;
+    UI ui;
 }
 
 int main(int /*argc*/, char const** /*argv*/)

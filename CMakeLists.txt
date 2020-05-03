@@ -18,8 +18,13 @@ enable_sanitizers(sanitizers)
 # Compile command database for clang-tidy
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include_directories(include)
+# ncurses
+find_package(Curses REQUIRED)
+include_directories(${CURSES_INCLUDE_DIR})
 
-add_executable(factory src/main.cpp src/Factory.cpp)
-target_link_libraries(factory PRIVATE warnings sanitizers)
+include_directories(include)
+include_directories(include/UI)
+
+add_executable(factory src/main.cpp src/Factory.cpp src/UI/UI.cpp)
+target_link_libraries(factory PRIVATE warnings sanitizers ${CURSES_LIBRARIES})
 target_compile_features(factory PRIVATE cxx_std_17)
