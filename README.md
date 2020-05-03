@@ -1,7 +1,7 @@
 # Multi-threaded Factory
 ![CI](https://github.com/kamilturek/factory/workflows/CI/badge.svg)
 
-## build
+## Build
 ```
 $ mkdir build
 $ cd build
