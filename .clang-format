@@ -22,7 +22,7 @@ BraceWrapping:
   AfterControlStatement: true
   AfterEnum: false
   AfterFunction: true
-  AfterNamespace: false
+  AfterNamespace: true
   AfterObjCDeclaration: false
   AfterStruct: true
   AfterUnion: false
@@ -50,7 +50,7 @@ Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false
 ExperimentalAutoDetectBinPacking: true
-FixNamespaceComments: true
+FixNamespaceComments: false
 ForEachMacros:
 - foreach
 - Q_FOREACH
@@ -73,7 +73,7 @@ Language: Cpp
 MacroBlockBegin: ''
 MacroBlockEnd: ''
 MaxEmptyLinesToKeep: 2
-NamespaceIndentation: Inner
+NamespaceIndentation: All
 ObjCBlockIndentWidth: 7
 ObjCSpaceAfterProperty: true
 ObjCSpaceBeforeProtocolList: false
