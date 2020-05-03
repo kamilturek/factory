@@ -6,7 +6,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      run: sudo apt-get install ncurses
+      run: sudo apt-get install libncurses5-dev libncursesw5-dev
     - name: Run cmake
       run: |
         mkdir build
