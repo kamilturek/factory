@@ -22,6 +22,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install clang-tidy
       run: sudo apt-get install clang-tidy
+    - name: Install dependencies
+      run: sudo apt-get install libncurses5-dev libncursesw5-dev
     - name: Generate compile command database
       run: |
         mkdir build
