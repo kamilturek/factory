@@ -22,6 +22,7 @@ UI::~UI()
 void UI::initializeMachineFigures()
 {
     initializeDoubleMachineFigures();
+    initializeSingleMachineFigures();
 }
 
 void UI::initializeDoubleMachineFigures()
@@ -31,8 +32,21 @@ void UI::initializeDoubleMachineFigures()
         constexpr int offset = 1;
         constexpr int spacing = 14;
         const int rowIndex = offset + i * spacing;
-        const int columnIndex = 5;
+        const int colIndex = 5;
 
-        figures.push_back(std::make_shared<DoubleMachineFigure>(rowIndex, columnIndex));
+        doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(rowIndex, colIndex));
+    }
+}
+
+void UI::initializeSingleMachineFigures()
+{
+    for (int i = 0; i < Config::linesCount; i++)
+    {
+        constexpr int offset = 3;
+        constexpr int spacing = 14;
+        const int rowIndex = offset + i * spacing;
+        const int colIndex = 30;
+
+        singleMachineFigures.push_back(std::make_shared<SingleMachineFigure>(rowIndex, colIndex));
     }
 }

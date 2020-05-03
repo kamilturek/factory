@@ -1,5 +1,6 @@
 #pragma once
 #include "DoubleMachineFigure.hpp"
+#include "SingleMachineFigure.hpp"
 #include <memory>
 #include <ncurses.h>
 #include <vector>
@@ -16,8 +17,10 @@ public:
     UI& operator=(UI&&) = default;
 
 private:
-    std::vector<std::shared_ptr<DoubleMachineFigure>> figures;
+    std::vector<std::shared_ptr<DoubleMachineFigure>> doubleMachineFigures;
+    std::vector<std::shared_ptr<SingleMachineFigure>> singleMachineFigures;
 
     void initializeMachineFigures();
     void initializeDoubleMachineFigures();
+    void initializeSingleMachineFigures();
 };
