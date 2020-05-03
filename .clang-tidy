@@ -1,5 +1,5 @@
 ---
-Checks:          '*,-modernize-use-trailing-return-type,-clang-diagnostic-unknown-warning-option'
+Checks:          '*,-modernize-use-trailing-return-type,-clang-diagnostic-unknown-warning-option, -llvm-header-guard, -cppcoreguidelines-pro-type-vararg, -hicpp-vararg'
 WarningsAsErrors: '1'
 HeaderFilterRegex: ''
 FormatStyle:     none

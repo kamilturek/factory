@@ -8,4 +8,6 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-clang-tidy -p "$1/build/" --extra-arg=-Wno-unknown-warning-option "$1/src/"*
+files=$(find "$1"/src/ "$1"/include/ -name '*.cpp' -or -name '*.hpp')
+# shellcheck disable=SC2086
+clang-tidy -p "$1/build/" --extra-arg=-Wno-unknown-warning-option $files
