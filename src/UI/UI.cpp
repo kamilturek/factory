@@ -23,6 +23,7 @@ void UI::initializeMachineFigures()
 {
     initializeDoubleMachineFigures();
     initializeSingleMachineFigures();
+    initializeHalfMachineFigures();
 }
 
 void UI::initializeDoubleMachineFigures()
@@ -31,8 +32,8 @@ void UI::initializeDoubleMachineFigures()
     {
         constexpr int offset = 1;
         constexpr int spacing = 14;
+        constexpr int colIndex = 5;
         const int rowIndex = offset + i * spacing;
-        const int colIndex = 5;
 
         doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(rowIndex, colIndex));
     }
@@ -44,9 +45,26 @@ void UI::initializeSingleMachineFigures()
     {
         constexpr int offset = 3;
         constexpr int spacing = 14;
+        constexpr int colIndex = 30;
         const int rowIndex = offset + i * spacing;
-        const int colIndex = 30;
 
         singleMachineFigures.push_back(std::make_shared<SingleMachineFigure>(rowIndex, colIndex));
+    }
+}
+
+void UI::initializeHalfMachineFigures()
+{
+    for (int i = 0; i < Config::linesCount + 1; i++)
+    {
+        constexpr int offset = 14;
+        constexpr int spacing = 6;
+        constexpr int colIndex = 55;
+        const int rowIndex = offset + i * spacing;
+        bool hasStandBelow = true;
+
+        if (i == Config::linesCount)
+            hasStandBelow = false;
+
+        halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(rowIndex, colIndex, hasStandBelow));
     }
 }

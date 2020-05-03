@@ -1,5 +1,6 @@
 #pragma once
 #include "DoubleMachineFigure.hpp"
+#include "HalfMachineFigure.hpp"
 #include "SingleMachineFigure.hpp"
 #include <memory>
 #include <ncurses.h>
@@ -19,8 +20,10 @@ public:
 private:
     std::vector<std::shared_ptr<DoubleMachineFigure>> doubleMachineFigures;
     std::vector<std::shared_ptr<SingleMachineFigure>> singleMachineFigures;
+    std::vector<std::shared_ptr<HalfMachineFigure>> halfMachineFigures;
 
     void initializeMachineFigures();
     void initializeDoubleMachineFigures();
     void initializeSingleMachineFigures();
+    void initializeHalfMachineFigures();
 };

@@ -26,7 +26,13 @@ include_directories(include)
 include_directories(include/UI)
 
 add_executable(
-  factory src/main.cpp src/Factory.cpp src/UI/UI.cpp src/UI/Figure.cpp
-          src/UI/DoubleMachineFigure.cpp src/UI/SingleMachineFigure.cpp)
+  factory
+  src/main.cpp
+  src/Factory.cpp
+  src/UI/UI.cpp
+  src/UI/Figure.cpp
+  src/UI/DoubleMachineFigure.cpp
+  src/UI/SingleMachineFigure.cpp
+  src/UI/HalfMachineFigure.cpp)
 target_link_libraries(factory PRIVATE warnings sanitizers ${CURSES_LIBRARIES})
 target_compile_features(factory PRIVATE cxx_std_17)
