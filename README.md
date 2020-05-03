@@ -26,6 +26,9 @@ $ make
 #### ENABLE_SANITIZER_UNDEFNED_BEH
 - Default: OFF
 
+#### WARNINGS_AS_ERRORS
+- Default: OFF
+
 ---
 <p align="center">
     Kamil Turek
