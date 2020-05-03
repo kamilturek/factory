@@ -1,5 +1,12 @@
 ---
-Checks:          '*,-modernize-use-trailing-return-type,-clang-diagnostic-unknown-warning-option, -llvm-header-guard, -cppcoreguidelines-pro-type-vararg, -hicpp-vararg'
+Checks: '*,
+        -modernize-use-trailing-return-type,
+        -clang-diagnostic-unknown-warning-option,
+        -llvm-header-guard,
+        -llvm-namespace-comment,
+        -fuchsia-default-arguments-declarations,
+        -*-vararg,
+        -*-braces-around-statements'
 WarningsAsErrors: '1'
 HeaderFilterRegex: ''
 FormatStyle:     none
