@@ -33,6 +33,7 @@ add_executable(
   src/UI/Figure.cpp
   src/UI/DoubleMachineFigure.cpp
   src/UI/SingleMachineFigure.cpp
-  src/UI/HalfMachineFigure.cpp)
+  src/UI/HalfMachineFigure.cpp
+  src/UI/CarFigure.cpp)
 target_link_libraries(factory PRIVATE warnings sanitizers ${CURSES_LIBRARIES})
 target_compile_features(factory PRIVATE cxx_std_17)

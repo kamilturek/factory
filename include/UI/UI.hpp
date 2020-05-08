@@ -1,4 +1,5 @@
 #pragma once
+#include "CarFigure.hpp"
 #include "DoubleMachineFigure.hpp"
 #include "HalfMachineFigure.hpp"
 #include "SingleMachineFigure.hpp"
@@ -21,6 +22,7 @@ private:
     std::vector<std::shared_ptr<DoubleMachineFigure>> doubleMachineFigures;
     std::vector<std::shared_ptr<SingleMachineFigure>> singleMachineFigures;
     std::vector<std::shared_ptr<HalfMachineFigure>> halfMachineFigures;
+    std::vector<std::shared_ptr<CarFigure>> carFigures;
 
     void initializeMachineFigures();
     void initializeDoubleMachineFigures();
