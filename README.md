@@ -9,6 +9,10 @@ $ cmake ..
 $ make
 ```
 
+## Dependencies
+- ncurses
+- pthread
+
 ## CMake Options
 
 #### CMAKE_BUILD_TYPE
