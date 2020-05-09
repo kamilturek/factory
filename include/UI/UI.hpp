@@ -14,7 +14,7 @@
 class UI
 {
 public:
-    UI(const std::array<Line, Config::linesCount>& lines);
+    explicit UI(const std::array<Line, Config::linesCount>& lines);
     UI(const UI&) = default;
     UI(UI&&) = default;
     ~UI();
@@ -31,5 +31,4 @@ private:
     void initializeDoubleMachineFigures(const std::array<std::shared_ptr<DoubleMachine>, Config::linesCount>& machines);
     void initializeSingleMachineFigures();
     void initializeHalfMachineFigures();
-    std::shared_ptr<CarFigure> createCarFigure();
-};
+};  

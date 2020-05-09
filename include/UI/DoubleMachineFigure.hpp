@@ -6,7 +6,7 @@
 class DoubleMachineFigure
 {
 public:
-    DoubleMachineFigure(int rowIndex, int colIndex, const std::shared_ptr<DoubleMachine>& machine);
+    DoubleMachineFigure(int rowIndex, int colIndex, std::shared_ptr<DoubleMachine> machine);
 
 private:
     std::shared_ptr<DoubleMachine> _machine;

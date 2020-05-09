@@ -4,5 +4,4 @@
 CarFigure::CarFigure(int rowIndex, int colIndex)
 {
     figure = std::make_unique<Figure>(Config::carWidth, Config::carHeight, rowIndex, colIndex, true);
-    figure->moveTo(10, 50);
 }

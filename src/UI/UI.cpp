@@ -65,9 +65,3 @@ void UI::initializeHalfMachineFigures()
         halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(rowIndex, colIndex, hasStandBelow));
     }
 }
-
-std::shared_ptr<CarFigure> UI::createCarFigure()
-{
-    carFigures.push_back(std::make_shared<CarFigure>(10, 10));
-    return carFigures.back();
-}

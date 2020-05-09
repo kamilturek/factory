@@ -2,11 +2,14 @@
 Checks: '*,
         -modernize-use-trailing-return-type,
         -clang-diagnostic-unknown-warning-option,
+        -fuchsia-default-arguments-declarations,
+        -google-readability-namespace-comments,
         -llvm-header-guard,
         -llvm-namespace-comment,
-        -fuchsia-default-arguments-declarations,
-        -*-vararg,
-        -*-braces-around-statements'
+        -modernize-use-nodiscard,
+        -*-member-init,
+        -*-braces-around-statements,
+        -*-vararg'
 WarningsAsErrors: '1'
 HeaderFilterRegex: ''
 FormatStyle:     none

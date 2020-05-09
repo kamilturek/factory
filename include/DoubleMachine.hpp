@@ -6,5 +6,6 @@ class DoubleMachine
 public:
     DoubleMachine();
 
+private:
     CountingLock lock;
 };

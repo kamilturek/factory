@@ -1,7 +1,7 @@
 #include "DoubleMachineFigure.hpp"
 #include "Config.hpp"
 
-DoubleMachineFigure::DoubleMachineFigure(int rowIndex, int colIndex, const std::shared_ptr<DoubleMachine>& machine) : _machine(machine)
+DoubleMachineFigure::DoubleMachineFigure(int rowIndex, int colIndex, std::shared_ptr<DoubleMachine> machine) : _machine(std::move(machine))
 {
     if (_machine == nullptr)
         throw std::logic_error("Machine does not exist.");
