@@ -11,7 +11,7 @@ $ make
 
 ## Dependencies
 - ncurses
-- pthread
+- pthreads
 
 ## CMake Options
 
