@@ -31,6 +31,7 @@ include_directories(include/UI)
 add_executable(
   factory
   src/main.cpp
+  src/Car.cpp
   src/CountingLock.cpp
   src/Factory.cpp
   src/DoubleMachine.cpp

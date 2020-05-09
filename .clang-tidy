@@ -10,7 +10,7 @@ Checks: '*,
         -*-member-init,
         -*-braces-around-statements,
         -*-vararg'
-WarningsAsErrors: '1'
+WarningsAsErrors: '*'
 HeaderFilterRegex: ''
 FormatStyle:     none
 

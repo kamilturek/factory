@@ -1,13 +1,13 @@
-#include "UI.hpp"
+#include "Car.hpp"
 #include "Factory.hpp"
-#include <array>
+#include "UI.hpp"
 
 void run()
 {
     Factory factory;
     UI ui(factory.getLines());
 
-    getch();   
+    getch();
 }
 
 int main(int /*argc*/, char const** /*argv*/)
