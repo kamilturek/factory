@@ -11,6 +11,8 @@ UI::UI()
     noecho();
 
     initializeMachineFigures();
+    createCarFigure();
+
     getch();
 }
 
@@ -32,7 +34,7 @@ void UI::initializeDoubleMachineFigures()
     {
         constexpr int offset = 1;
         constexpr int spacing = 14;
-        constexpr int colIndex = 5;
+        constexpr int colIndex = 20;
         const int rowIndex = offset + i * spacing;
 
         doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(rowIndex, colIndex));
@@ -45,7 +47,7 @@ void UI::initializeSingleMachineFigures()
     {
         constexpr int offset = 3;
         constexpr int spacing = 14;
-        constexpr int colIndex = 30;
+        constexpr int colIndex = 110;
         const int rowIndex = offset + i * spacing;
 
         singleMachineFigures.push_back(std::make_shared<SingleMachineFigure>(rowIndex, colIndex));
@@ -58,7 +60,7 @@ void UI::initializeHalfMachineFigures()
     {
         constexpr int offset = 14;
         constexpr int spacing = 6;
-        constexpr int colIndex = 55;
+        constexpr int colIndex = 196;
         const int rowIndex = offset + i * spacing;
         bool hasStandBelow = true;
 
@@ -68,3 +70,9 @@ void UI::initializeHalfMachineFigures()
         halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(rowIndex, colIndex, hasStandBelow));
     }
 }
+
+std::shared_ptr<CarFigure> UI::createCarFigure()
+{
+    carFigures.push_back(std::make_shared<CarFigure>(10, 10));
+    return carFigures.back();
+} 

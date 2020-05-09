@@ -28,4 +28,5 @@ private:
     void initializeDoubleMachineFigures();
     void initializeSingleMachineFigures();
     void initializeHalfMachineFigures();
+    std::shared_ptr<CarFigure> createCarFigure();
 };
