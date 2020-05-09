@@ -6,8 +6,8 @@
 
 struct Line
 {
-    std::unique_ptr<DoubleMachine> first;
-    std::unique_ptr<SingleMachine> second;
+    std::shared_ptr<DoubleMachine> first;
+    std::shared_ptr<SingleMachine> second;
     std::shared_ptr<HalfMachine> thirdOne;
     std::shared_ptr<HalfMachine> thirdTwo;
 };

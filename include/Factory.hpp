@@ -7,6 +7,8 @@ class Factory
 public:
     Factory();
 
+    const std::array<Line, Config::linesCount>& getLines() const;
+
 private:
     std::array<Line, Config::linesCount> lines;
 

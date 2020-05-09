@@ -4,10 +4,8 @@
 
 void run()
 {
-    std::array<DoubleMachine, Config::linesCount> doubleMachines;
-
-    UI ui;
-    ui.initializeDoubleMachineFigures(doubleMachines);
+    Factory factory;
+    UI ui(factory.getLines());
 
     getch();   
 }
