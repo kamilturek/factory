@@ -1,5 +1,4 @@
 #include "UI.hpp"
-#include "Config.hpp"
 #include "Figure.hpp"
 
 UI::UI()
@@ -9,11 +8,6 @@ UI::UI()
     curs_set(0);
     cbreak();
     noecho();
-
-    initializeMachineFigures();
-    createCarFigure();
-
-    getch();
 }
 
 UI::~UI()
@@ -23,12 +17,11 @@ UI::~UI()
 
 void UI::initializeMachineFigures()
 {
-    initializeDoubleMachineFigures();
-    initializeSingleMachineFigures();
-    initializeHalfMachineFigures();
+    // initializeSingleMachineFigures();
+    // initializeHalfMachineFigures();
 }
 
-void UI::initializeDoubleMachineFigures()
+void UI::initializeDoubleMachineFigures(const std::array<DoubleMachine, Config::linesCount>& machines)
 {
     for (int i = 0; i < Config::linesCount; i++)
     {

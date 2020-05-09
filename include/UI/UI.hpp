@@ -1,8 +1,11 @@
 #pragma once
 #include "CarFigure.hpp"
+#include "Config.hpp"
+#include "DoubleMachine.hpp"
 #include "DoubleMachineFigure.hpp"
 #include "HalfMachineFigure.hpp"
 #include "SingleMachineFigure.hpp"
+#include <array>
 #include <memory>
 #include <ncurses.h>
 #include <vector>
@@ -15,6 +18,8 @@ public:
     UI(UI&&) = default;
     ~UI();
 
+    void initializeDoubleMachineFigures(const std::array<DoubleMachine, Config::linesCount>& machines);
+
     UI& operator=(const UI&) = default;
     UI& operator=(UI&&) = default;
 
@@ -25,7 +30,6 @@ private:
     std::vector<std::shared_ptr<CarFigure>> carFigures;
 
     void initializeMachineFigures();
-    void initializeDoubleMachineFigures();
     void initializeSingleMachineFigures();
     void initializeHalfMachineFigures();
     std::shared_ptr<CarFigure> createCarFigure();

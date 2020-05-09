@@ -1,6 +1,10 @@
 #pragma once
-#include "Machine.hpp"
+#include "CountingLock.hpp"
 
-class DoubleMachine : public Machine
+class DoubleMachine
 {
+public:
+    DoubleMachine();
+
+    CountingLock lock;
 };

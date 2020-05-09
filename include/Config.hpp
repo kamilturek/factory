@@ -3,6 +3,8 @@
 namespace Config
 {
     constexpr int linesCount = 4;
+    
+    // Figure sizes
     constexpr int machineWidth = 21;
     constexpr int machineHeight = 3;
     constexpr int standWidth = 19;
