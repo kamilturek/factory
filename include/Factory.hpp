@@ -2,8 +2,8 @@
 #include "Car.hpp"
 #include "Config.hpp"
 #include "Line.hpp"
-#include "Random.hpp"
 #include "Queue.hpp"
+#include "Random.hpp"
 
 class Factory
 {

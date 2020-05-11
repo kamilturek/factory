@@ -2,7 +2,7 @@
 #include "Figure.hpp"
 
 UI::UI(const std::array<Line, Config::linesCount>& lines, std::shared_ptr<Queue<std::shared_ptr<Car>>> cars) :
-    _viewThread(&UI::refreshView, this), _cars(cars)
+    _viewThread(&UI::refreshView, this), _cars(std::move(cars))
 {
     initscr();
     keypad(stdscr, TRUE);
