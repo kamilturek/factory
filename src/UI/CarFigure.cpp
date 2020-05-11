@@ -12,7 +12,7 @@ CarFigure::CarFigure(std::shared_ptr<Car> car) :
 {
 }
 
-const std::shared_ptr<const Car> CarFigure::getCar() const
+std::shared_ptr<const Car> CarFigure::getCar() const
 {
     return _car;
 }

@@ -1,7 +1,8 @@
 #include "UI.hpp"
 #include "Figure.hpp"
 
-UI::UI(const std::array<Line, Config::linesCount>& lines, std::pair<std::queue<std::shared_ptr<Car>>, std::mutex>& cars) : _viewThread(&UI::refreshView, this), _cars(cars)
+UI::UI(const std::array<Line, Config::linesCount>& lines, std::shared_ptr<Queue<std::shared_ptr<Car>>> cars) :
+    _viewThread(&UI::refreshView, this), _cars(cars)
 {
     initscr();
     keypad(stdscr, TRUE);
@@ -67,20 +68,19 @@ void UI::initializeHalfMachineFigures()
 
 void UI::initializeCarFigures()
 {
-    std::lock_guard<std::mutex> lock(_cars.second);
-    while (!_cars.first.empty())
+    std::lock_guard<std::mutex> lock(_cars->mutex);
+    while (!_cars->queue.empty())
     {
-        _carFigures.push_back(std::make_shared<CarFigure>(_cars.first.front()));
-        _cars.first.pop();
+        _carFigures.push_back(std::make_shared<CarFigure>(_cars->queue.front()));
+        _cars->queue.pop();
     }
 }
 
 void UI::refreshView()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    std::this_thread::sleep_for(Config::refreshInterval);
     initializeCarFigures();
     refreshCarFigures();
-
 }
 
 void UI::refreshCarFigures()
@@ -88,7 +88,7 @@ void UI::refreshCarFigures()
     std::array<int, Config::linesCount> awaitingCarsPerLine;
     awaitingCarsPerLine.fill(0);
 
-    for (auto carFigure : _carFigures)
+    for (const auto& carFigure : _carFigures)
     {
         const auto car = carFigure->getCar();
         if (car->getState() == State::WAITING)
@@ -99,9 +99,11 @@ void UI::refreshCarFigures()
 
     for (std::size_t i = 0; i < awaitingCarsPerLine.size(); i++)
     {
+        constexpr int rowOffset = -8;
+        constexpr int colOffset = -18;
         const auto coords = Config::doubleMachinePositions.at(i);
         const auto text = "Awaiting cars: " + std::to_string(awaitingCarsPerLine.at(i));
-        mvprintw(coords.first - 8, coords.second - 18, text.c_str());
+        mvprintw(coords.first + rowOffset, coords.second + colOffset, text.c_str());
     }
 
     refresh();

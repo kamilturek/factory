@@ -1,9 +1,12 @@
 #pragma once
 #include <array>
+#include <chrono>
 
 namespace Config
 {
     constexpr int linesCount = 4;
+
+    constexpr std::chrono::milliseconds refreshInterval(300);
 
     // Figure sizes
     constexpr int machineWidth = 21;
