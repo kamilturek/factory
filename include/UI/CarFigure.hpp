@@ -1,11 +1,14 @@
+#include "Car.hpp"
 #include "Figure.hpp"
 #include <memory>
 
-class CarFigure
+class CarFigure : public Figure
 {
 public:
-    CarFigure(int rowIndex, int colIndex);
+    CarFigure(std::shared_ptr<Car> car);
+
+    const std::shared_ptr<const Car> getCar() const;
 
 private:
-    std::unique_ptr<Figure> figure;
+    std::shared_ptr<Car> _car;
 };

@@ -11,6 +11,9 @@ public:
     Car(Car&&) = delete;
     virtual ~Car();
 
+    unsigned int getLineNumber() const;
+    State getState() const;
+
     Car& operator=(const Car&) = delete;
     Car& operator=(Car&&) = delete;
 

@@ -1,7 +1,18 @@
 #include "CarFigure.hpp"
 #include "Config.hpp"
+#include <iostream>
 
-CarFigure::CarFigure(int rowIndex, int colIndex)
+CarFigure::CarFigure(std::shared_ptr<Car> car) :
+    Figure(Config::carWidth,
+      Config::carHeight,
+      Config::invisible.first,
+      Config::invisible.second,
+      false),
+    _car(std::move(car))
 {
-    figure = std::make_unique<Figure>(Config::carWidth, Config::carHeight, rowIndex, colIndex, true);
+}
+
+const std::shared_ptr<const Car> CarFigure::getCar() const
+{
+    return _car;
 }

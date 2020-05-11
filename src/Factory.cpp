@@ -12,32 +12,46 @@ Factory::Factory()
 
 void Factory::setupLines()
 {
-    lines.at(0).number = 0;
-    lines.at(0).first = std::make_shared<DoubleMachine>();
-    lines.at(0).second = std::make_shared<SingleMachine>();
-    lines.at(0).thirdOne = std::make_shared<HalfMachine>();
-    lines.at(0).thirdTwo = std::make_shared<HalfMachine>();
+    _lines.at(0).number = 0;
+    _lines.at(0).first = std::make_shared<DoubleMachine>();
+    _lines.at(0).second = std::make_shared<SingleMachine>();
+    _lines.at(0).thirdOne = std::make_shared<HalfMachine>();
+    _lines.at(0).thirdTwo = std::make_shared<HalfMachine>();
 
-    lines.at(1).number = 1;
-    lines.at(1).first = std::make_shared<DoubleMachine>();
-    lines.at(1).second = std::make_shared<SingleMachine>();
-    lines.at(1).thirdOne = lines.at(0).thirdTwo;
-    lines.at(1).thirdTwo = std::make_shared<HalfMachine>();
+    _lines.at(1).number = 1;
+    _lines.at(1).first = std::make_shared<DoubleMachine>();
+    _lines.at(1).second = std::make_shared<SingleMachine>();
+    _lines.at(1).thirdOne = _lines.at(0).thirdTwo;
+    _lines.at(1).thirdTwo = std::make_shared<HalfMachine>();
 
-    lines.at(2).number = 2;
-    lines.at(2).first = std::make_shared<DoubleMachine>();
-    lines.at(2).second = std::make_shared<SingleMachine>();
-    lines.at(2).thirdOne = lines.at(1).thirdTwo;
-    lines.at(2).thirdTwo = std::make_shared<HalfMachine>();
+    _lines.at(2).number = 2;
+    _lines.at(2).first = std::make_shared<DoubleMachine>();
+    _lines.at(2).second = std::make_shared<SingleMachine>();
+    _lines.at(2).thirdOne = _lines.at(1).thirdTwo;
+    _lines.at(2).thirdTwo = std::make_shared<HalfMachine>();
 
-    lines.at(3).number = 3;
-    lines.at(3).first = std::make_shared<DoubleMachine>();
-    lines.at(3).second = std::make_shared<SingleMachine>();
-    lines.at(3).thirdOne = lines.at(2).thirdTwo;
-    lines.at(3).thirdTwo = std::make_shared<HalfMachine>();
+    _lines.at(3).number = 3;
+    _lines.at(3).first = std::make_shared<DoubleMachine>();
+    _lines.at(3).second = std::make_shared<SingleMachine>();
+    _lines.at(3).thirdOne = _lines.at(2).thirdTwo;
+    _lines.at(3).thirdTwo = std::make_shared<HalfMachine>();
 }
 
 const std::array<Line, Config::linesCount>& Factory::getLines() const
 {
-    return lines;
+    return _lines;
+}
+
+std::pair<std::queue<std::shared_ptr<Car>>, std::mutex>& Factory::getCars()
+{
+    return _cars;
+}
+
+void Factory::createCar()
+{
+    const std::size_t lineNumber = static_cast<std::size_t>(random.randomInt(0, Config::linesCount - 1));
+    const Line& line = _lines.at(lineNumber);
+
+    std::lock_guard<std::mutex> lock(_cars.second);
+    _cars.first.push(std::make_shared<Car>(line));
 }

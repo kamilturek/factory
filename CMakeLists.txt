@@ -35,6 +35,7 @@ add_executable(
   src/CountingLock.cpp
   src/Factory.cpp
   src/DoubleMachine.cpp
+  src/Random.cpp
   src/UI/UI.cpp
   src/UI/Figure.cpp
   src/UI/DoubleMachineFigure.cpp

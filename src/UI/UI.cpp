@@ -1,8 +1,7 @@
 #include "UI.hpp"
 #include "Figure.hpp"
-#include <exception>
 
-UI::UI(const std::array<Line, Config::linesCount>& lines)
+UI::UI(const std::array<Line, Config::linesCount>& lines, std::pair<std::queue<std::shared_ptr<Car>>, std::mutex>& cars) : _viewThread(&UI::refreshView, this), _cars(cars)
 {
     initscr();
     keypad(stdscr, TRUE);
@@ -64,4 +63,46 @@ void UI::initializeHalfMachineFigures()
 
         halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(rowIndex, colIndex, hasStandBelow));
     }
+}
+
+void UI::initializeCarFigures()
+{
+    std::lock_guard<std::mutex> lock(_cars.second);
+    while (!_cars.first.empty())
+    {
+        _carFigures.push_back(std::make_shared<CarFigure>(_cars.first.front()));
+        _cars.first.pop();
+    }
+}
+
+void UI::refreshView()
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    initializeCarFigures();
+    refreshCarFigures();
+
+}
+
+void UI::refreshCarFigures()
+{
+    std::array<int, Config::linesCount> awaitingCarsPerLine;
+    awaitingCarsPerLine.fill(0);
+
+    for (auto carFigure : _carFigures)
+    {
+        const auto car = carFigure->getCar();
+        if (car->getState() == State::WAITING)
+        {
+            awaitingCarsPerLine.at(car->getLineNumber())++;
+        }
+    }
+
+    for (std::size_t i = 0; i < awaitingCarsPerLine.size(); i++)
+    {
+        const auto coords = Config::doubleMachinePositions.at(i);
+        const auto text = "Awaiting cars: " + std::to_string(awaitingCarsPerLine.at(i));
+        mvprintw(coords.first - 8, coords.second - 18, text.c_str());
+    }
+
+    refresh();
 }

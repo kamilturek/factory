@@ -5,7 +5,10 @@
 void run()
 {
     Factory factory;
-    UI ui(factory.getLines());
+    UI ui(factory.getLines(), factory.getCars());
+    factory.createCar();
+    factory.createCar();
+    factory.createCar();
 
     getch();
 }
