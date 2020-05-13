@@ -4,6 +4,9 @@
 
 namespace Config
 {
+    // Window sizes
+
+
     constexpr int linesCount = 4;
 
     constexpr std::chrono::milliseconds refreshInterval(300);
@@ -13,8 +16,6 @@ namespace Config
     constexpr int machineHeight = 3;
     constexpr int standWidth = 19;
     constexpr int standHeight = 5;
-    constexpr int carWidth = 15;
-    constexpr int carHeight = 4;
 
     // Machine positions
     constexpr std::pair<int, int> invisible { -99, -99 };

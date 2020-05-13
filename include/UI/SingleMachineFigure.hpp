@@ -7,7 +7,13 @@ class SingleMachineFigure
 public:
     SingleMachineFigure(int rowIndex, int colIndex);
 
+    int getRowIndex() const;
+    int getColIndex() const;
+
 private:
+    int _currRowIndex;
+    int _currColIndex;
+
     std::unique_ptr<Figure> machine;
     std::unique_ptr<Figure> stand;
 

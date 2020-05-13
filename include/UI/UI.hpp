@@ -1,13 +1,12 @@
 #pragma once
 #include "Car.hpp"
-#include "CarFigure.hpp"
 #include "Config.hpp"
 #include "DoubleMachine.hpp"
 #include "DoubleMachineFigure.hpp"
 #include "HalfMachineFigure.hpp"
 #include "Line.hpp"
-#include "Queue.hpp"
 #include "SingleMachineFigure.hpp"
+#include "Factory.hpp"
 #include <array>
 #include <memory>
 #include <ncurses.h>
@@ -16,7 +15,7 @@
 class UI
 {
 public:
-    UI(const std::array<Line, Config::linesCount>& lines, std::shared_ptr<Queue<std::shared_ptr<Car>>> cars);
+    UI(std::shared_ptr<Factory> factory);
     UI(const UI&) = delete;
     UI(UI&&) = delete;
     ~UI();
@@ -25,20 +24,29 @@ public:
     UI& operator=(UI&&) = delete;
 
 private:
-    std::thread _viewThread;
+    std::unique_ptr<std::thread> _viewThread;
+    std::unique_ptr<std::thread> _keyboardThread;
+
+    WINDOW* mainWindow;
+    WINDOW* helpWindow;
+
+    std::shared_ptr<Factory> _factory;
 
     std::vector<std::shared_ptr<DoubleMachineFigure>> doubleMachineFigures;
     std::vector<std::shared_ptr<SingleMachineFigure>> singleMachineFigures;
     std::vector<std::shared_ptr<HalfMachineFigure>> halfMachineFigures;
-    std::vector<std::shared_ptr<CarFigure>> _carFigures;
 
-    std::shared_ptr<Queue<std::shared_ptr<Car>>> _cars;
-
-    void initializeDoubleMachineFigures(const std::array<std::shared_ptr<DoubleMachine>, Config::linesCount>& machines);
+    void initializeDoubleMachineFigures();
     void initializeSingleMachineFigures();
     void initializeHalfMachineFigures();
-    void initializeCarFigures();
+
+    void initializeMainWindow();
+    void initializeHelpWindow();
 
     void refreshView();
-    void refreshCarFigures();
+    void refreshMachines();
+    void refreshCars();
+
+    void watchKeyboard();
+    void destroyWindow(WINDOW* window);
 };

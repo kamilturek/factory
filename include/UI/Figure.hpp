@@ -9,7 +9,11 @@ public:
     Figure(Figure&&) = delete;
     virtual ~Figure();
 
+    void refresh();
     void moveTo(int rowIndex, int colIndex);
+    void setBorder(bool value);
+    void draw();
+    void erase();
 
     Figure& operator=(const Figure&) = delete;
     Figure& operator=(Figure&&) = delete;
@@ -22,7 +26,4 @@ private:
     int _currColIndex;
     bool _border;
 
-    void draw();
-    void erase();
-    void redraw();
 };

@@ -21,6 +21,11 @@ void Figure::draw()
     wrefresh(window);
 }
 
+void Figure::setBorder(bool value)
+{
+    _border = value;
+}
+
 void Figure::erase()
 {
     wborder(window, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
@@ -28,15 +33,15 @@ void Figure::erase()
     delwin(window);
 }
 
-void Figure::redraw()
+void Figure::refresh()
 {
-    erase();
-    draw();
+    wrefresh(window);
 }
 
 void Figure::moveTo(int rowIndex, int colIndex)
 {
     _currRowIndex = rowIndex;
     _currColIndex = colIndex;
-    redraw();
+    erase();
+    draw();
 }

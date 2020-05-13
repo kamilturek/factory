@@ -1,7 +1,7 @@
 #include "HalfMachineFigure.hpp"
 #include "Config.hpp"
 
-HalfMachineFigure::HalfMachineFigure(int rowIndex, int colIndex, bool hasStand)
+HalfMachineFigure::HalfMachineFigure(int rowIndex, int colIndex, bool hasStand) : _currRowIndex(rowIndex), _currColIndex(colIndex)
 {
     if (hasStand)
         initializeStand(rowIndex, colIndex);
@@ -17,4 +17,14 @@ void HalfMachineFigure::initializeStand(int rowIndex, int colIndex)
 {
     constexpr int offset = 1;
     stand = std::make_unique<Figure>(Config::standWidth, Config::standHeight, rowIndex + Config::machineHeight - 1, colIndex + offset, true);
+}
+
+int HalfMachineFigure::getRowIndex() const
+{
+    return _currRowIndex;
+}
+
+int HalfMachineFigure::getColIndex() const
+{
+    return _currColIndex;
 }

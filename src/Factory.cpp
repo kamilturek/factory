@@ -5,10 +5,19 @@
 #include <iostream>
 #include <memory>
 
-Factory::Factory()
+Factory::Factory() : _isWorking(true)
 {
     setupLines();
-    _cars = std::make_shared<Queue<std::shared_ptr<Car>>>();
+}
+
+bool Factory::isWorking() const
+{
+    return _isWorking;
+}
+
+void Factory::setWorking(bool value)
+{
+    _isWorking = value;
 }
 
 void Factory::setupLines()
@@ -43,7 +52,7 @@ const std::array<Line, Config::linesCount>& Factory::getLines() const
     return _lines;
 }
 
-std::shared_ptr<Queue<std::shared_ptr<Car>>> Factory::getCars()
+const std::vector<std::unique_ptr<Car>>& Factory::getCars() const
 {
     return _cars;
 }
@@ -53,6 +62,5 @@ void Factory::createCar()
     const auto lineNumber = static_cast<std::size_t>(random.randomInt(0, Config::linesCount - 1));
     const Line& line = _lines.at(lineNumber);
 
-    std::lock_guard<std::mutex> lock(_cars->mutex);
-    _cars->queue.push(std::make_shared<Car>(line));
+    _cars.push_back(std::make_unique<Car>(line));
 }

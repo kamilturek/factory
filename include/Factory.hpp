@@ -2,7 +2,6 @@
 #include "Car.hpp"
 #include "Config.hpp"
 #include "Line.hpp"
-#include "Queue.hpp"
 #include "Random.hpp"
 
 class Factory
@@ -10,15 +9,19 @@ class Factory
 public:
     Factory();
 
+    bool isWorking() const;
     const std::array<Line, Config::linesCount>& getLines() const;
-    std::shared_ptr<Queue<std::shared_ptr<Car>>> getCars();
+    const std::vector<std::unique_ptr<Car>>& getCars() const;
 
+    void setWorking(bool value);
     void createCar();
 
 private:
-    std::array<Line, Config::linesCount> _lines;
-    std::shared_ptr<Queue<std::shared_ptr<Car>>> _cars;
+    bool _isWorking;
     Random random;
+
+    std::array<Line, Config::linesCount> _lines;
+    std::vector<std::unique_ptr<Car>> _cars;
 
     void setupLines();
 };

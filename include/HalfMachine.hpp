@@ -3,5 +3,4 @@
 
 class HalfMachine : public Machine
 {
-
 };

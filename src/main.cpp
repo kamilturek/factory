@@ -4,13 +4,12 @@
 
 void run()
 {
-    Factory factory;
-    UI ui(factory.getLines(), factory.getCars());
-    factory.createCar();
-    factory.createCar();
-    factory.createCar();
+    auto factory = std::make_shared<Factory>();
+    UI ui(factory);
 
-    getch();
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    factory->setWorking(true);
+    while (factory->isWorking());
 }
 
 int main(int /*argc*/, char const** /*argv*/)
