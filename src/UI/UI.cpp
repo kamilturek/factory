@@ -30,9 +30,6 @@ UI::UI(std::shared_ptr<Factory> factory) :
 
 UI::~UI()
 {
-    destroyWindow(helpWindow);
-    destroyWindow(mainWindow);
-
     _keyboardThread->join();
     _viewThread->join();
     endwin();
@@ -54,47 +51,32 @@ void UI::watchKeyboard()
     }
 }
 
-void UI::destroyWindow(WINDOW* window)
-{
-    wborder(window, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-    wrefresh(window);
-    delwin(window);
-}
-
 void UI::initializeMainWindow()
 {
-    constexpr int windowWidth = 237;
-    constexpr int windowHeight = 52;
-    constexpr int rowIndex = 0;
-    constexpr int colIndex = 0;
-    
-    mainWindow = newwin(windowHeight, windowWidth, rowIndex, colIndex);
-    box(mainWindow, 0, 0);
+    constexpr int width = 237;
+    constexpr int height = 52;
+    constexpr int x = 0;
+    constexpr int y = 0;
+
+    _mainWindow = std::make_unique<Window>(width, height, x, y);
 
     const std::string leftHeader = "MULTITHREADED FACTORY | SO2";
     const std::string rightHeader = "KAMIL TUREK 2020";
-    
-    mvwprintw(mainWindow, 0, 5, leftHeader.c_str());
-    mvwprintw(mainWindow, 0, 237 - static_cast<int>(rightHeader.length()) - 5, rightHeader.c_str());
 
-    refresh();
-    wrefresh(mainWindow);
+    _mainWindow->printAt(5, 0, leftHeader);
+    _mainWindow->printAt(237 - static_cast<int>(rightHeader.length()) - 5, 0, rightHeader);
 }
 
 void UI::initializeHelpWindow()
 {
-    constexpr int windowHeight = 5;
-    constexpr int windowWidth = 237;
-    constexpr int rowIndex = 57 - 5;
-    constexpr int colIndex = 0;
+    constexpr int width = 237;
+    constexpr int height = 5;
+    constexpr int x = 0;
+    constexpr int y = 52;
 
-    helpWindow = newwin(windowHeight, windowWidth, rowIndex, colIndex);
-    box(helpWindow, 0, 0);
-
-    mvwprintw(helpWindow, 0, 5, "HELP");
-    mvwprintw(helpWindow, 3, 1, "[ESC] - EXIT PROGRAM");
-
-    wrefresh(helpWindow);
+    _helpWindow = std::make_unique<Window>(width, height, x, y);
+    _helpWindow->printAt(5, 0, "HELP");
+    _helpWindow->printAt(1, 3, "[ESC] - EXIT PROGRAM");
 }
 
 void UI::initializeDoubleMachineFigures()
@@ -158,13 +140,16 @@ void UI::refreshMachines()
         machine->upperPartTaken = false;
         machine->refresh();
     }
+
+    for (const auto& machine : singleMachineFigures)
+    {
+    }
 }
 
 void UI::refreshCars()
 {
     std::array<int, Config::linesCount> awaitingCarsPerLine;
     awaitingCarsPerLine.fill(0);
-
 
     for (const auto& car : _factory->getCars())
     {
@@ -196,6 +181,10 @@ void UI::refreshCars()
             car->_figure->moveTo(machine->getRowIndex() + 2, machine->getColIndex() + 3);
             car->_figure->refresh();
         }
+        else if (car->getState() == State::FINISHED)
+        {
+            car->_figure->moveTo(-99, -99);
+        }
     }
 
     // Print awaiting
@@ -208,8 +197,8 @@ void UI::refreshCars()
 
         const std::string text = "Awaiting cars: " + std::to_string(awaitingCarsPerLine.at(i));
 
-        mvwprintw(mainWindow, rowIndex, colIndex, text.c_str());
+        mvwprintw(_mainWindow->raw(), rowIndex, colIndex, text.c_str());
     }
 
-    wrefresh(mainWindow);
+    _mainWindow->update();
 }

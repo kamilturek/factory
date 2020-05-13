@@ -3,10 +3,12 @@
 #include "Config.hpp"
 #include "DoubleMachine.hpp"
 #include "DoubleMachineFigure.hpp"
+#include "Factory.hpp"
 #include "HalfMachineFigure.hpp"
 #include "Line.hpp"
 #include "SingleMachineFigure.hpp"
-#include "Factory.hpp"
+#include "Window.hpp"
+#include <algorithm>
 #include <array>
 #include <memory>
 #include <ncurses.h>
@@ -27,8 +29,8 @@ private:
     std::unique_ptr<std::thread> _viewThread;
     std::unique_ptr<std::thread> _keyboardThread;
 
-    WINDOW* mainWindow;
-    WINDOW* helpWindow;
+    std::unique_ptr<Window> _mainWindow;
+    std::unique_ptr<Window> _helpWindow;
 
     std::shared_ptr<Factory> _factory;
 
@@ -48,5 +50,4 @@ private:
     void refreshCars();
 
     void watchKeyboard();
-    void destroyWindow(WINDOW* window);
 };

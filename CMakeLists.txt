@@ -38,6 +38,8 @@ add_executable(
   src/Random.cpp
   src/UI/UI.cpp
   src/UI/Figure.cpp
+  src/UI/Window.cpp
+  src/UI/WindowSet.cpp
   src/UI/DoubleMachineFigure.cpp
   src/UI/SingleMachineFigure.cpp
   src/UI/HalfMachineFigure.cpp)
