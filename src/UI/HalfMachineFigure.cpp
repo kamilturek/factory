@@ -1,30 +1,14 @@
 #include "HalfMachineFigure.hpp"
-#include "Config.hpp"
 
-HalfMachineFigure::HalfMachineFigure(int rowIndex, int colIndex, bool hasStand) : _currRowIndex(rowIndex), _currColIndex(colIndex)
+HalfMachineFigure::HalfMachineFigure(int x, int y, bool drawStand) : WindowSet()
 {
-    if (hasStand)
-        initializeStand(rowIndex, colIndex);
-    initializeMachine(rowIndex, colIndex);
-}
-
-void HalfMachineFigure::initializeMachine(int rowIndex, int colIndex)
-{
-    machine = std::make_unique<Figure>(Config::machineWidth, Config::machineHeight, rowIndex, colIndex, true);
-}
-
-void HalfMachineFigure::initializeStand(int rowIndex, int colIndex)
-{
+    constexpr int machineWidth = 21;
+    constexpr int machineHeight = 3;
+    constexpr int standWidth = 19;
+    constexpr int standHeight = 5;
     constexpr int offset = 1;
-    stand = std::make_unique<Figure>(Config::standWidth, Config::standHeight, rowIndex + Config::machineHeight - 1, colIndex + offset, true);
-}
-
-int HalfMachineFigure::getRowIndex() const
-{
-    return _currRowIndex;
-}
-
-int HalfMachineFigure::getColIndex() const
-{
-    return _currColIndex;
+    
+    if (drawStand)
+        _windows.push_back(std::make_unique<Window>(standWidth, standHeight, x + offset, y + machineHeight - offset));
+    _windows.push_back(std::make_unique<Window>(machineWidth, machineHeight, x, y));
 }

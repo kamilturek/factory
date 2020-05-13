@@ -2,6 +2,7 @@
 #include "Line.hpp"
 #include "State.hpp"
 #include "Position.hpp"
+#include "Figure.hpp"
 #include <atomic>
 #include <thread>
 

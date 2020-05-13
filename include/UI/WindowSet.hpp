@@ -12,6 +12,6 @@ public:
     void redraw() override;
     void update() override;
 
-protected:
     std::vector<std::unique_ptr<IWindow>> _windows;
+protected:
 };

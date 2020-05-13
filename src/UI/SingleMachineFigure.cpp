@@ -1,29 +1,13 @@
-#include "Config.hpp"
 #include "SingleMachineFigure.hpp"
 
-SingleMachineFigure::SingleMachineFigure(int rowIndex, int colIndex) : _currRowIndex(rowIndex), _currColIndex(colIndex)
+SingleMachineFigure::SingleMachineFigure(int x, int y)
 {
-    initializeStand(rowIndex, colIndex);
-    initializeMachine(rowIndex, colIndex);
-}
+    constexpr int machineWidth = 21;
+    constexpr int machineHeight = 3;
+    constexpr int standWidth = 19;
+    constexpr int standHeight = 5;
+    constexpr int offset = 1;
 
-void SingleMachineFigure::initializeMachine(int rowIndex, int colIndex)
-{
-    machine = std::make_unique<Figure>(Config::machineWidth, Config::machineHeight, rowIndex, colIndex, true);
-}
-
-void SingleMachineFigure::initializeStand(int rowIndex, int colIndex)
-{
-    constexpr int offset = 1; 
-    stand = std::make_unique<Figure>(Config::standWidth, Config::standHeight, rowIndex + Config::machineHeight - 1, colIndex + offset, true);
-}
-
-int SingleMachineFigure::getRowIndex() const
-{
-    return _currRowIndex;
-}
-
-int SingleMachineFigure::getColIndex() const
-{
-    return _currColIndex;
+    _windows.push_back(std::make_unique<Window>(standWidth, standHeight, x + offset, y + machineHeight - offset));
+    _windows.push_back(std::make_unique<Window>(machineWidth, machineHeight, x, y));
 }

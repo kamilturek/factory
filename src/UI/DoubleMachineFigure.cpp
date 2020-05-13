@@ -1,40 +1,24 @@
 #include "DoubleMachineFigure.hpp"
-#include "Config.hpp"
 
-DoubleMachineFigure::DoubleMachineFigure(int rowIndex, int colIndex) : _currRowIndex(rowIndex), _currColIndex(colIndex) 
+DoubleMachineFigure::DoubleMachineFigure(int x, int y) : WindowSet()
 {
-    initializeStands(rowIndex, colIndex);
-    initializeMachine(rowIndex, colIndex);
-}
-
-void DoubleMachineFigure::initializeMachine(int rowIndex, int colIndex)
-{
-    _machineFigure = std::make_unique<Figure>(Config::machineWidth, Config::machineHeight, rowIndex + Config::standHeight, colIndex, true);
-}
-
-void DoubleMachineFigure::initializeStands(int rowIndex, int colIndex)
-{
+    constexpr int machineWidth = 21;
+    constexpr int machineHeight = 3;
+    constexpr int standWidth = 19;
+    constexpr int standHeight = 5;
     constexpr int offset = 1;
-    _standFigures.first = std::make_unique<Figure>(Config::standWidth, Config::standHeight, rowIndex + offset, colIndex + offset, true);
-    _standFigures.second = std::make_unique<Figure>(Config::standWidth, Config::standHeight, rowIndex + Config::standHeight + Config::machineHeight - offset, colIndex + offset, true);
+    
+    _windows.push_back(std::make_unique<Window>(standWidth, standHeight, x + offset, y + offset));
+    _windows.push_back(std::make_unique<Window>(standWidth, standHeight, x + offset, y + standHeight + machineHeight - offset));
+    _windows.push_back(std::make_unique<Window>(machineWidth, machineHeight, x, y + standHeight));
 }
 
-void DoubleMachineFigure::refresh()
+bool DoubleMachineFigure::isUpperStandTaken() const
 {
-    _standFigures.first->erase();
-    _standFigures.first->draw();
-    _standFigures.second->erase();
-    _standFigures.second->draw();
-    _machineFigure->erase();
-    _machineFigure->draw();
+    return _upperStandTaken;
 }
 
-int DoubleMachineFigure::getRowIndex() const
+void DoubleMachineFigure::setUpperStandTaken(bool value)
 {
-    return _currRowIndex;
-}
-
-int DoubleMachineFigure::getColIndex() const
-{
-    return _currColIndex;
+    _upperStandTaken = value;
 }

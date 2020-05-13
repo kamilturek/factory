@@ -85,10 +85,10 @@ void UI::initializeDoubleMachineFigures()
     {
         constexpr int offset = 1;
         constexpr int spacing = 12;
-        constexpr int colIndex = 20;
-        const int rowIndex = offset + i * spacing;
+        constexpr int x = 20;
+        const int y = offset + i * spacing;
 
-        doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(rowIndex, colIndex));
+        doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(x, y));
     }
 }
 
@@ -98,10 +98,10 @@ void UI::initializeSingleMachineFigures()
     {
         constexpr int offset = 3;
         constexpr int spacing = 12;
-        constexpr int colIndex = 110;
-        const int rowIndex = offset + i * spacing;
+        constexpr int x = 110;
+        const int y = offset + i * spacing;
 
-        singleMachineFigures.push_back(std::make_shared<SingleMachineFigure>(rowIndex, colIndex));
+        singleMachineFigures.push_back(std::make_unique<SingleMachineFigure>(x, y));
     }
 }
 
@@ -111,14 +111,14 @@ void UI::initializeHalfMachineFigures()
     {
         constexpr int offset = 10;
         constexpr int spacing = 6;
-        constexpr int colIndex = 196;
-        const int rowIndex = offset + i * spacing;
+        constexpr int x = 196;
+        const int y = offset + i * spacing;
         bool hasStandBelow = true;
 
         if (i == Config::linesCount)
             hasStandBelow = false;
 
-        halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(rowIndex, colIndex, hasStandBelow));
+        halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(x, y, hasStandBelow));
     }
 }
 
@@ -137,13 +137,15 @@ void UI::refreshMachines()
 {
     for (const auto& machine : doubleMachineFigures)
     {
-        machine->upperPartTaken = false;
-        machine->refresh();
+        machine->setUpperStandTaken(false);
+        machine->redraw();
     }
 
     for (const auto& machine : singleMachineFigures)
-    {
-    }
+        machine->redraw();
+
+    for (const auto& machine : halfMachineFigures)
+        machine->redraw();
 }
 
 void UI::refreshCars()
@@ -160,25 +162,25 @@ void UI::refreshCars()
         else if (car->getState() == State::PHASE_ONE)
         {
             const auto machine = doubleMachineFigures.at(car->getLineNumber());
-            if (!machine->upperPartTaken)
+            if (!machine->isUpperStandTaken())
             {
-                car->_figure->moveTo(machine->getRowIndex() + 2, machine->getColIndex() + 3);
-                machine->upperPartTaken = true;
+                car->_figure->moveTo(machine->y() + 1, machine->x() + 3);
+                machine->setUpperStandTaken(true);
             }
             else
-                car->_figure->moveTo(machine->getRowIndex() + 7, machine->getColIndex() + 3);
+                car->_figure->moveTo(machine->y() + 6, machine->x() + 3);
             car->_figure->refresh();
         }
         else if (car->getState() == State::PHASE_TWO)
         {
-            const auto machine = singleMachineFigures.at(car->getLineNumber());
-            car->_figure->moveTo(machine->getRowIndex() + 2, machine->getColIndex() + 3);
+            const auto& machine = singleMachineFigures.at(car->getLineNumber());
+            car->_figure->moveTo(machine->y() + 2, machine->x() + 3);
             car->_figure->refresh();
         }
         else if (car->getState() == State::PHASE_THREE)
         {
             const auto machine = halfMachineFigures.at(car->getLineNumber());
-            car->_figure->moveTo(machine->getRowIndex() + 2, machine->getColIndex() + 3);
+            car->_figure->moveTo(machine->y() + 2, machine->x() + 3);
             car->_figure->refresh();
         }
         else if (car->getState() == State::FINISHED)

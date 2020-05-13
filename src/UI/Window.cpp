@@ -3,6 +3,7 @@
 Window::Window(int width, int height, int x, int y) : _width(width), _height(height), _x(x), _y(y)
 {
     draw();
+    update();
 }
 
 Window::~Window()
@@ -14,6 +15,7 @@ void Window::redraw()
 {
     erase();
     draw();
+    update();
 }
 
 void Window::update()
@@ -47,8 +49,6 @@ void Window::draw()
 {
     _window = newwin(_height, _width, _y, _x);
     box(_window, 0, 0);
-    refresh();
-    wrefresh(_window);
 }
 
 void Window::erase()

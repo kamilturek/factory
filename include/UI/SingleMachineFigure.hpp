@@ -1,22 +1,10 @@
 #pragma once
-#include "Figure.hpp"
+#include "Window.hpp"
+#include "WindowSet.hpp"
 #include <memory>
 
-class SingleMachineFigure
+class SingleMachineFigure : public WindowSet
 {
 public:
-    SingleMachineFigure(int rowIndex, int colIndex);
-
-    int getRowIndex() const;
-    int getColIndex() const;
-
-private:
-    int _currRowIndex;
-    int _currColIndex;
-
-    std::unique_ptr<Figure> machine;
-    std::unique_ptr<Figure> stand;
-
-    void initializeMachine(int rowIndex, int colIndex);
-    void initializeStand(int rowIndex, int colIndex);
+    SingleMachineFigure(int x, int y);
 };

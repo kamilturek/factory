@@ -35,7 +35,7 @@ private:
     std::shared_ptr<Factory> _factory;
 
     std::vector<std::shared_ptr<DoubleMachineFigure>> doubleMachineFigures;
-    std::vector<std::shared_ptr<SingleMachineFigure>> singleMachineFigures;
+    std::vector<std::unique_ptr<SingleMachineFigure>> singleMachineFigures;
     std::vector<std::shared_ptr<HalfMachineFigure>> halfMachineFigures;
 
     void initializeDoubleMachineFigures();
