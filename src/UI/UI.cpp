@@ -1,5 +1,4 @@
 #include "UI.hpp"
-#include "Figure.hpp"
 
 UI::UI(std::shared_ptr<Factory> factory) :
     _factory(std::move(factory))
@@ -164,28 +163,25 @@ void UI::refreshCars()
             const auto machine = doubleMachineFigures.at(car->getLineNumber());
             if (!machine->isUpperStandTaken())
             {
-                car->_figure->moveTo(machine->y() + 1, machine->x() + 3);
+                car->figure()->moveTo(machine->x() + 3, machine->y() + 1);
                 machine->setUpperStandTaken(true);
             }
             else
-                car->_figure->moveTo(machine->y() + 6, machine->x() + 3);
-            car->_figure->refresh();
+                car->figure()->moveTo(machine->x() + 3, machine->y() + 6);
         }
         else if (car->getState() == State::PHASE_TWO)
         {
             const auto& machine = singleMachineFigures.at(car->getLineNumber());
-            car->_figure->moveTo(machine->y() + 2, machine->x() + 3);
-            car->_figure->refresh();
+            car->figure()->moveTo(machine->x() + 3, machine->y() + 2);
         }
         else if (car->getState() == State::PHASE_THREE)
         {
             const auto machine = halfMachineFigures.at(car->getLineNumber());
-            car->_figure->moveTo(machine->y() + 2, machine->x() + 3);
-            car->_figure->refresh();
+            car->figure()->moveTo(machine->x() + 3, machine->y() + 2);
         }
         else if (car->getState() == State::FINISHED)
         {
-            car->_figure->moveTo(-99, -99);
+            car->figure()->hide();
         }
     }
 

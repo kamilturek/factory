@@ -1,5 +1,9 @@
 #include "Window.hpp"
 
+Window::Window(int width, int height) : _width(width), _height(height), _x(_invisibleX), _y(_invisibleY)
+{
+}
+
 Window::Window(int width, int height, int x, int y) : _width(width), _height(height), _x(x), _y(y)
 {
     draw();
@@ -9,6 +13,7 @@ Window::Window(int width, int height, int x, int y) : _width(width), _height(hei
 Window::~Window()
 {
     erase();
+    endwin();
 }
 
 void Window::redraw()

@@ -6,6 +6,7 @@
 class Window : public IWindow
 {
 public:
+    Window(int width, int height);
     Window(int width, int height, int x, int y);
     virtual ~Window();
 
@@ -17,8 +18,10 @@ public:
 
     WINDOW* raw() const;
 
-private:
-    WINDOW* _window;
+protected:
+    static constexpr int _invisibleX = -99;
+    static constexpr int _invisibleY = -99;
+
     int _width;
     int _height;
     int _x;
@@ -26,4 +29,6 @@ private:
 
     void draw();
     void erase();
+
+    WINDOW* _window;
 };

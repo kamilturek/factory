@@ -1,8 +1,7 @@
 #pragma once
 #include "Line.hpp"
 #include "State.hpp"
-#include "Position.hpp"
-#include "Figure.hpp"
+#include "CarFigure.hpp"
 #include <atomic>
 #include <thread>
 
@@ -20,17 +19,12 @@ public:
     Car& operator=(const Car&) = delete;
     Car& operator=(Car&&) = delete;
 
-    Position position = Position::UNDEFINED;
+    std::shared_ptr<CarFigure> figure() const;
 
-    std::unique_ptr<Figure> _figure;
 private:
-    static constexpr int width = 15;
-    static constexpr int height = 4;
-
-    State _state;
-
-
     std::thread _thread;
+    std::shared_ptr<CarFigure> _figure;
+    State _state;
     const Line& _line;
 
     void assemble();

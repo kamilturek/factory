@@ -5,13 +5,18 @@ Car::Car(const Line& line) :
     _state(State::WAITING),
     _thread(&Car::assemble, this),
     _line(line),
-    _figure(std::make_unique<Figure>(width, height, -99, -99, true))
+    _figure(std::make_unique<CarFigure>())
 {
 }
 
 Car::~Car()
 {
     _thread.join();
+}
+
+std::shared_ptr<CarFigure> Car::figure() const
+{
+    return _figure;
 }
 
 unsigned int Car::getLineNumber() const
