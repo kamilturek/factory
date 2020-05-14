@@ -27,7 +27,6 @@ UI::~UI()
 {
     _keyboardThread->join();
     _viewThread->join();
-    std::cerr << "aaaa";
 }
 
 void UI::watchKeyboard()

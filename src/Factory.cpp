@@ -16,6 +16,7 @@ Factory::~Factory()
 {
     _carCollector.join();
     _carScheduler.join();
+    endwin();
 }
 
 int Factory::completedCars() const

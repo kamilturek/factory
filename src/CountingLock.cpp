@@ -4,7 +4,7 @@ CountingLock::CountingLock(int max) : count(max), maxCount(max)
 {
 }
 
-void CountingLock::acquire()
+void CountingLock::lock()
 {
     std::unique_lock<std::mutex> lock(mutex);
     cv.wait(lock, [&]
@@ -18,7 +18,7 @@ void CountingLock::acquire()
     });
 }
 
-void CountingLock::release()
+void CountingLock::unlock()
 {
     std::unique_lock<std::mutex> lock(mutex);
 
