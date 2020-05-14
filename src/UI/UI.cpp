@@ -200,11 +200,13 @@ void UI::refreshCars()
             const int progress = car->progress() * 13;
             
             wattron(car->figure()->raw(), A_REVERSE);
+            wattron(car->figure()->raw(), car->figure()->color());
             for (int i = 1; i < progress + 1; i++)
             {
                 mvwprintw(car->figure()->raw(), 1, i, " ");
                 mvwprintw(car->figure()->raw(), 2, i, " ");
             }
+            wattroff(car->figure()->raw(), car->figure()->color());
             wattroff(car->figure()->raw(), A_REVERSE);
             wrefresh(car->figure()->raw());
         }

@@ -10,6 +10,7 @@ public:
     Window(int width, int height, int x, int y);
     virtual ~Window();
 
+    int color() const;
     int x() const override;
     int y() const override;
     void redraw() override;
@@ -32,5 +33,5 @@ protected:
     void draw();
     void erase();
 
-    WINDOW* _window;
+    WINDOW* _window = nullptr;
 };

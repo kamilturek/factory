@@ -13,9 +13,7 @@ Window::Window(int width, int height, int x, int y) : _width(width), _height(hei
 
 Window::~Window()
 {
-    wborder(_window, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-    wrefresh(_window);
-    delwin(_window);
+    erase();
 
     if (_endwin)
         endwin();
@@ -32,6 +30,11 @@ void Window::update()
 {
     refresh();
     wrefresh(_window);
+}
+
+int Window::color() const
+{
+    return COLOR_PAIR(_color);
 }
 
 int Window::x() const
@@ -59,15 +62,15 @@ void Window::draw()
 {
     _window = newwin(_height, _width, _y, _x);
 
-    wattron(_window, COLOR_PAIR(_color));
+    wattron(_window, color());
     box(_window, 0, 0);
-    wattroff(_window, COLOR_PAIR(_color));
+    wattroff(_window, color());
 }
 
 void Window::erase()
 {
-    werase(_window);
     wborder(_window, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
     wrefresh(_window);
     delwin(_window);
+    _window = nullptr;
 }
