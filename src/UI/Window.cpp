@@ -1,11 +1,11 @@
 #include "Window.hpp"
 #include <iostream>
 
-Window::Window(int width, int height, int color) : _width(width), _height(height), _x(_invisibleX), _y(_invisibleY), _color(color)
+Window::Window(int width, int height, int color) : _width(width), _height(height), _x(_invisibleX), _y(_invisibleY), _color(color), _endwin(false)
 {
 }
 
-Window::Window(int width, int height, int x, int y) : _width(width), _height(height), _x(x), _y(y), _color(0)
+Window::Window(int width, int height, int x, int y) : _width(width), _height(height), _x(x), _y(y), _color(0), _endwin(true)
 {
     draw();
     update();
@@ -13,8 +13,12 @@ Window::Window(int width, int height, int x, int y) : _width(width), _height(hei
 
 Window::~Window()
 {
-    erase();
-    endwin();
+    wborder(_window, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+    wrefresh(_window);
+    delwin(_window);
+
+    if (_endwin)
+        endwin();
 }
 
 void Window::redraw()

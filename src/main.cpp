@@ -8,7 +8,6 @@ void run()
     UI ui(factory);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    factory->setWorking(true);
     while (factory->isWorking());
 }
 

@@ -1,4 +1,5 @@
 #include "UI.hpp"
+#include <iostream>
 
 UI::UI(std::shared_ptr<Factory> factory) :
     _factory(std::move(factory))
@@ -18,13 +19,6 @@ UI::UI(std::shared_ptr<Factory> factory) :
     initializeSingleMachineFigures();
     initializeHalfMachineFigures();
 
-    _factory->createCar();
-    _factory->createCar();
-    _factory->createCar();
-    _factory->createCar();
-    _factory->createCar();
-    _factory->createCar();
-
     _viewThread = std::make_unique<std::thread>(&UI::refreshView, this);
     _keyboardThread = std::make_unique<std::thread>(&UI::watchKeyboard, this);
 }
@@ -33,7 +27,7 @@ UI::~UI()
 {
     _keyboardThread->join();
     _viewThread->join();
-    endwin();
+    std::cerr << "aaaa";
 }
 
 void UI::watchKeyboard()
@@ -140,6 +134,7 @@ void UI::refreshView()
     {
         refreshMachines();
         refreshCars();
+        refreshHelpWindow();
         refresh();
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
@@ -164,6 +159,8 @@ void UI::refreshCars()
 {
     std::array<int, Config::linesCount> awaitingCarsPerLine;
     awaitingCarsPerLine.fill(0);
+
+    std::lock_guard<std::mutex> lock(_factory->carCollectionMutex);
 
     for (const auto& car : _factory->getCars())
     {
@@ -198,16 +195,19 @@ void UI::refreshCars()
             car->figure()->hide();
         }
         
-        const int progress = car->progress() * 13;
-        
-        wattron(car->figure()->raw(), A_REVERSE);
-        for (int i = 1; i < progress + 1; i++)
+        if (car->getState() != State::WAITING && car->getState() != State::FINISHED)
         {
-            mvwprintw(car->figure()->raw(), 1, i, " ");
-            mvwprintw(car->figure()->raw(), 2, i, " ");
+            const int progress = car->progress() * 13;
+            
+            wattron(car->figure()->raw(), A_REVERSE);
+            for (int i = 1; i < progress + 1; i++)
+            {
+                mvwprintw(car->figure()->raw(), 1, i, " ");
+                mvwprintw(car->figure()->raw(), 2, i, " ");
+            }
+            wattroff(car->figure()->raw(), A_REVERSE);
+            wrefresh(car->figure()->raw());
         }
-        wattroff(car->figure()->raw(), A_REVERSE);
-        wrefresh(car->figure()->raw());
     }
 
     // Print awaiting
@@ -224,4 +224,17 @@ void UI::refreshCars()
     }
 
     _mainWindow->update();
+}
+
+void UI::refreshHelpWindow()
+{
+    std::string message = "CARS IN THE FACTORY: ";
+
+    {
+        std::lock_guard<std::mutex> lock(_factory->carCollectionMutex);
+        message += std::to_string(_factory->getCars().size());
+    }
+    message += " ";
+
+    _helpWindow->printAt(30, 3, message.c_str());
 }

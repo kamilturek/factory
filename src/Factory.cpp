@@ -5,9 +5,16 @@
 #include <iostream>
 #include <memory>
 
-Factory::Factory() : _isWorking(true)
+Factory::Factory() :
+    _isWorking(true), _carScheduler(&Factory::scheduleCars, this), _carCollector(&Factory::collectCars, this)
 {
     setupLines();
+}
+
+Factory::~Factory()
+{
+    _carCollector.join();
+    _carScheduler.join();
 }
 
 bool Factory::isWorking() const
@@ -57,11 +64,36 @@ const std::vector<std::unique_ptr<Car>>& Factory::getCars() const
     return _cars;
 }
 
-void Factory::createCar()
+void Factory::scheduleCars()
 {
-    const auto lineNumber = static_cast<std::size_t>(_random.randomInt(0, Config::linesCount - 1));
-    const Line& line = _lines.at(lineNumber);
-    const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
+    while (_isWorking)
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    _cars.push_back(std::make_unique<Car>(line, color));
+        // TO BE REPLACED WITH CONDITION VARIABLE ?
+        std::lock_guard<std::mutex> lock(carCollectionMutex);
+        if (_cars.size() < 20)
+        {
+            const auto lineNumber = static_cast<std::size_t>(_random.randomInt(0, Config::linesCount - 1));
+            const Line& line = _lines.at(lineNumber);
+            const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
+
+            _cars.push_back(std::make_unique<Car>(line, color));
+        }
+    }
+}
+
+void Factory::collectCars()
+{
+    while (_isWorking)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+        // TO BE REPLACED WITH CONDITION VARIABLE ?
+        std::lock_guard<std::mutex> lock(carCollectionMutex);
+        _cars.erase(std::remove_if(_cars.begin(), _cars.end(), [](const auto& car) { return car->getState() == State::FINISHED; }), _cars.end());
+    }
+
+    std::lock_guard<std::mutex> lock(carCollectionMutex);
+    _cars.erase(_cars.begin(), _cars.end());
 }

@@ -27,11 +27,11 @@ public:
 private:
     std::thread _thread;
     std::shared_ptr<CarFigure> _figure;
-    State _state;
+    std::atomic<State> _state;
     const Line& _line;
 
     const int _color;
-    float _progress;
+    std::atomic<float> _progress;
 
     void assemble();
     void makeProgress();

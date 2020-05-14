@@ -27,6 +27,7 @@ protected:
     int _x;
     int _y;
     int _color;
+    bool _endwin;
 
     void draw();
     void erase();
