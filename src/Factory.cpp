@@ -6,7 +6,8 @@
 #include <memory>
 
 Factory::Factory() :
-    _isWorking(true), _carScheduler(&Factory::scheduleCars, this), _carCollector(&Factory::collectCars, this)
+    _carScheduler(&Factory::scheduleCars, this),
+    _carCollector(&Factory::collectCars, this)
 {
     setupLines();
 }
@@ -83,7 +84,7 @@ void Factory::scheduleCars()
             const Line& line = _lines.at(lineNumber);
             const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
 
-            _cars.push_back(std::make_shared<Car>(line, color));
+            _cars.push_back(std::make_shared<Car>(line, color, _isWorking));
         }
     }
 }

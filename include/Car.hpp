@@ -9,7 +9,7 @@
 class Car
 {
 public:
-    explicit Car(const Line& line, int color);
+    explicit Car(const Line& line, int color, const std::atomic<bool>& isFactoryWorking);
     Car(const Car&) = delete;
     Car(Car&&) = delete;
     virtual ~Car();
@@ -31,6 +31,7 @@ private:
 
     const int _color;
 
+    const std::atomic<bool>& _isFactoryWorking;
     std::atomic<State> _state = State::WAITING;
     std::atomic<float> _progress = 0.0f;
 

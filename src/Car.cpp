@@ -1,11 +1,12 @@
 #include "Car.hpp"
 #include "Config.hpp"
 
-Car::Car(const Line& line, int color) :
+Car::Car(const Line& line, int color, const std::atomic<bool>& isFactoryWorking) :
     _thread(&Car::assemble, this),
     _figure(std::make_shared<CarFigure>(color)),
     _line(line),
-    _color(color)
+    _color(color),
+    _isFactoryWorking(isFactoryWorking)
 {
 }
 
@@ -38,21 +39,24 @@ void Car::assemble()
 {
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
+    // Double Machine
     _line.first->lock.acquire();
     _state = State::PHASE_ONE;
 
     makeProgress();
 
-    _line.second->mutex.lock();
+    // Single Machine
+    std::unique_lock<std::mutex> singleMachineLock(_line.second->mutex);
     _line.first->lock.release();
     _state = State::PHASE_TWO;
 
     makeProgress();
 
+    // Half Machine
     {
         std::scoped_lock lock(_line.thirdOne->mutex, _line.thirdTwo->mutex);
         _state = State::PHASE_THREE;
-        _line.second->mutex.unlock();
+        singleMachineLock.unlock();
 
         makeProgress();
 

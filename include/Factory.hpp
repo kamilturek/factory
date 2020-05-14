@@ -23,13 +23,14 @@ public:
     int completedCars() const;
 
 private:
-    bool _isWorking;
+    std::atomic<bool> _isWorking = true;
+    std::atomic<int> _completedCars = 0;
+
     std::thread _carScheduler;
     std::thread _carCollector;
 
     Random _random;
 
-    std::atomic<int> _completedCars = 0;
 
     std::array<Line, Config::linesCount> _lines;
     std::vector<std::shared_ptr<Car>> _cars;
