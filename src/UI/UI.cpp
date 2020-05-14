@@ -1,8 +1,8 @@
 #include "UI.hpp"
 #include <iostream>
 
-UI::UI(std::shared_ptr<Factory> factory) :
-    _factory(std::move(factory))
+UI::UI(std::shared_ptr<Factory> factory, const int refreshInterval) :
+    _refreshInterval(refreshInterval), _factory(std::move(factory))
 {
     initscr();
     keypad(stdscr, TRUE);
@@ -141,7 +141,7 @@ void UI::refreshView()
         refreshCars();
         refreshHelpWindow();
         refresh();
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::this_thread::sleep_for(std::chrono::milliseconds(_refreshInterval));
     }
 }
 

@@ -17,7 +17,7 @@
 class UI
 {
 public:
-    UI(std::shared_ptr<Factory> factory);
+    UI(std::shared_ptr<Factory> factory, int refreshInterval);
     UI(const UI&) = delete;
     UI(UI&&) = delete;
     ~UI();
@@ -26,6 +26,8 @@ public:
     UI& operator=(UI&&) = delete;
 
 private:
+    const int _refreshInterval;
+
     std::unique_ptr<std::thread> _viewThread;
     std::unique_ptr<std::thread> _keyboardThread;
 

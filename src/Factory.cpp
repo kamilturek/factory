@@ -5,7 +5,10 @@
 #include <iostream>
 #include <memory>
 
-Factory::Factory() :
+Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
+    _carsNumber(carsNumber),
+    _scheduleInterval(scheduleInterval),
+    _collectionInterval(collectionInterval),
     _carScheduler(&Factory::scheduleCars, this),
     _carCollector(&Factory::collectCars, this)
 {
@@ -75,11 +78,11 @@ void Factory::scheduleCars()
 {
     while (_isWorking)
     {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(_scheduleInterval));
 
         // CONSIDER USAGE OF CONDITION VARIABLE
         std::lock_guard<std::mutex> lock(carsMutex);
-        if (_cars.size() < 20)
+        if (_cars.size() < static_cast<std::size_t>(_carsNumber))
         {
             const auto lineNumber = static_cast<std::size_t>(_random.randomInt(0, Config::linesCount - 1));
             const Line& line = _lines.at(lineNumber);
@@ -94,7 +97,7 @@ void Factory::collectCars()
 {
     while (_isWorking)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(_collectionInterval));
 
         // CONSIDER USAGE OF CONDITION VARIABLE
         std::lock_guard<std::mutex> lock(carsMutex);

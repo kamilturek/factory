@@ -8,21 +8,23 @@
 class Factory
 {
 public:
-    Factory();
+    Factory(int carsNumber, int scheduleInterval, int collectionInterval);
     ~Factory();
 
     bool isWorking() const;
-
-    const std::array<Line, Config::linesCount>& getLines() const;
-
     void setWorking(bool value);
 
     std::mutex carsMutex;
     const std::vector<std::shared_ptr<Car>>& cars() const;
+    const std::array<Line, Config::linesCount>& getLines() const;
 
     int completedCars() const;
 
 private:
+    const int _carsNumber;
+    const int _scheduleInterval;
+    const int _collectionInterval;
+
     std::atomic<bool> _isWorking = true;
     std::atomic<int> _completedCars = 0;
 
