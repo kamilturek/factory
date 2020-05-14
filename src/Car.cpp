@@ -5,7 +5,8 @@ Car::Car(const Line& line, int color) :
     _thread(&Car::assemble, this),
     _figure(std::make_shared<CarFigure>(color)),
     _state(State::WAITING),
-    _line(line)
+    _line(line),
+    _color(color)
 {
 }
 
@@ -17,6 +18,11 @@ Car::~Car()
 std::shared_ptr<CarFigure> Car::figure() const
 {
     return _figure;
+}
+
+float Car::progress() const
+{
+    return _progress;
 }
 
 unsigned int Car::getLineNumber() const

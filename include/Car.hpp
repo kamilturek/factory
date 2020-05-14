@@ -14,6 +14,8 @@ public:
     Car(Car&&) = delete;
     virtual ~Car();
 
+    float progress() const;
+
     unsigned int getLineNumber() const;
     State getState() const;
 
@@ -28,6 +30,7 @@ private:
     State _state;
     const Line& _line;
 
+    const int _color;
     float _progress;
 
     void assemble();

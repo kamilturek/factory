@@ -141,7 +141,7 @@ void UI::refreshView()
         refreshMachines();
         refreshCars();
         refresh();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 }
 
@@ -167,6 +167,7 @@ void UI::refreshCars()
 
     for (const auto& car : _factory->getCars())
     {
+
         if (car->getState() == State::WAITING)
         {
             awaitingCarsPerLine.at(car->getLineNumber())++;
@@ -196,6 +197,17 @@ void UI::refreshCars()
         {
             car->figure()->hide();
         }
+        
+        const int progress = car->progress() * 13;
+        
+        wattron(car->figure()->raw(), A_REVERSE);
+        for (int i = 1; i < progress + 1; i++)
+        {
+            mvwprintw(car->figure()->raw(), 1, i, " ");
+            mvwprintw(car->figure()->raw(), 2, i, " ");
+        }
+        wattroff(car->figure()->raw(), A_REVERSE);
+        wrefresh(car->figure()->raw());
     }
 
     // Print awaiting
