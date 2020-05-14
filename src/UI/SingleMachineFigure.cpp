@@ -1,6 +1,6 @@
 #include "SingleMachineFigure.hpp"
 
-SingleMachineFigure::SingleMachineFigure(int x, int y)
+SingleMachineFigure::SingleMachineFigure(int x, int y, const int number) : _number(number)
 {
     constexpr int machineWidth = 21;
     constexpr int machineHeight = 3;
@@ -10,4 +10,10 @@ SingleMachineFigure::SingleMachineFigure(int x, int y)
 
     _windows.push_back(std::make_unique<Window>(standWidth, standHeight, x + offset, y + machineHeight - offset));
     _windows.push_back(std::make_unique<Window>(machineWidth, machineHeight, x, y));
+}
+
+void SingleMachineFigure::redraw()
+{
+    WindowSet::redraw();
+    mvprintw(_windows.back()->y() + 1, _windows.front()->x() + 9, std::to_string(_number).c_str());
 }

@@ -99,7 +99,7 @@ void UI::initializeDoubleMachineFigures()
         constexpr int x = 20;
         const int y = offset + i * spacing;
 
-        doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(x, y));
+        doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(x, y, i + 1));
     }
 }
 
@@ -112,7 +112,7 @@ void UI::initializeSingleMachineFigures()
         constexpr int x = 110;
         const int y = offset + i * spacing;
 
-        singleMachineFigures.push_back(std::make_unique<SingleMachineFigure>(x, y));
+        singleMachineFigures.push_back(std::make_unique<SingleMachineFigure>(x, y, i + 1));
     }
 }
 
@@ -129,7 +129,7 @@ void UI::initializeHalfMachineFigures()
         if (i == Config::linesCount)
             hasStandBelow = false;
 
-        halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(x, y, hasStandBelow));
+        halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(x, y, hasStandBelow, i + 1));
     }
 }
 

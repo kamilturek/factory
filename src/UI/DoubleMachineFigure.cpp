@@ -1,6 +1,6 @@
 #include "DoubleMachineFigure.hpp"
 
-DoubleMachineFigure::DoubleMachineFigure(int x, int y) : WindowSet()
+DoubleMachineFigure::DoubleMachineFigure(int x, int y, int number) : WindowSet(), _number(number)
 {
     constexpr int machineWidth = 21;
     constexpr int machineHeight = 3;
@@ -21,4 +21,10 @@ bool DoubleMachineFigure::isUpperStandTaken() const
 void DoubleMachineFigure::setUpperStandTaken(bool value)
 {
     _upperStandTaken = value;
+}
+
+void DoubleMachineFigure::redraw()
+{
+    WindowSet::redraw();
+    mvprintw(_windows.back()->y() + 1, _windows.back()->x() + 10, std::to_string(_number).c_str());
 }
