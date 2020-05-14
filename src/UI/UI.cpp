@@ -60,6 +60,10 @@ void UI::initializeMainWindow()
 
     _mainWindow->printAt(5, 0, leftHeader);
     _mainWindow->printAt(237 - static_cast<int>(rightHeader.length()) - 5, 0, rightHeader);
+    _mainWindow->printAt(3, 7, "AWAITING CARS: ");
+    _mainWindow->printAt(3, 19, "AWAITING CARS: ");
+    _mainWindow->printAt(3, 31, "AWAITING CARS: ");
+    _mainWindow->printAt(3, 43, "AWAITING CARS: ");
 }
 
 void UI::initializeHelpWindow()
@@ -72,6 +76,7 @@ void UI::initializeHelpWindow()
     _helpWindow = std::make_unique<Window>(width, height, x, y);
     _helpWindow->printAt(5, 0, "HELP");
     _helpWindow->printAt(1, 3, "[ESC] - EXIT PROGRAM");
+    _helpWindow->printAt(30, 3, "CARS IN THE FACTORY: ");
 }
 
 void UI::initializeColors()
@@ -212,31 +217,29 @@ void UI::refreshCars()
         }
     }
 
-    // Print awaiting
     for (std::size_t i = 0; i < awaitingCarsPerLine.size(); i++)
     {
         constexpr int offset = 7;
         constexpr int spacing = 12;
-        constexpr int colIndex = 3;
-        const int rowIndex = offset + i * spacing;
-
-        const std::string text = "Awaiting cars: " + std::to_string(awaitingCarsPerLine.at(i));
-
-        mvwprintw(_mainWindow->raw(), rowIndex, colIndex, text.c_str());
+        constexpr int x = 18;
+        const int y = offset + i * spacing;
+        
+        _mainWindow->printAt(x, y, "  ");
+        _mainWindow->printAt(x, y, std::to_string(awaitingCarsPerLine.at(i)));
     }
-
-    _mainWindow->update();
 }
 
 void UI::refreshHelpWindow()
 {
-    std::string message = "CARS IN THE FACTORY: ";
+    std::size_t carsCount;
 
     {
         std::lock_guard<std::mutex> lock(_factory->carCollectionMutex);
-        message += std::to_string(_factory->getCars().size());
+        carsCount = _factory->getCars().size();
     }
-    message += " ";
 
-    _helpWindow->printAt(30, 3, message.c_str());
+    constexpr int x = 51;
+    constexpr int y = 3;
+    _helpWindow->printAt(x, y, "   ");
+    _helpWindow->printAt(x, y, std::to_string(carsCount));
 }
