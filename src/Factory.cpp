@@ -17,6 +17,11 @@ Factory::~Factory()
     _carScheduler.join();
 }
 
+int Factory::completedCars() const
+{
+    return _completedCars;
+}
+
 bool Factory::isWorking() const
 {
     return _isWorking;
@@ -59,7 +64,7 @@ const std::array<Line, Config::linesCount>& Factory::getLines() const
     return _lines;
 }
 
-const std::vector<std::unique_ptr<Car>>& Factory::getCars() const
+const std::vector<std::shared_ptr<Car>>& Factory::cars() const
 {
     return _cars;
 }
@@ -70,15 +75,15 @@ void Factory::scheduleCars()
     {
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
-        // TO BE REPLACED WITH CONDITION VARIABLE ?
-        std::lock_guard<std::mutex> lock(carCollectionMutex);
+        // CONSIDER USAGE OF CONDITION VARIABLE
+        std::lock_guard<std::mutex> lock(carsMutex);
         if (_cars.size() < 20)
         {
             const auto lineNumber = static_cast<std::size_t>(_random.randomInt(0, Config::linesCount - 1));
             const Line& line = _lines.at(lineNumber);
             const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
 
-            _cars.push_back(std::make_unique<Car>(line, color));
+            _cars.push_back(std::make_shared<Car>(line, color));
         }
     }
 }
@@ -89,11 +94,13 @@ void Factory::collectCars()
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-        // TO BE REPLACED WITH CONDITION VARIABLE ?
-        std::lock_guard<std::mutex> lock(carCollectionMutex);
-        _cars.erase(std::remove_if(_cars.begin(), _cars.end(), [](const auto& car) { return car->getState() == State::FINISHED; }), _cars.end());
+        // CONSIDER USAGE OF CONDITION VARIABLE
+        std::lock_guard<std::mutex> lock(carsMutex);
+        const auto completedBegin = std::remove_if(_cars.begin(), _cars.end(), [](const auto& car) { return car->state() == State::FINISHED; });
+        _completedCars += static_cast<int>(std::distance(completedBegin, _cars.end()));
+        _cars.erase(completedBegin, _cars.end());
     }
 
-    std::lock_guard<std::mutex> lock(carCollectionMutex);
+    std::lock_guard<std::mutex> lock(carsMutex);
     _cars.erase(_cars.begin(), _cars.end());
 }

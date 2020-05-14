@@ -17,7 +17,7 @@ public:
     float progress() const;
 
     unsigned int getLineNumber() const;
-    State getState() const;
+    State state() const;
 
     Car& operator=(const Car&) = delete;
     Car& operator=(Car&&) = delete;
@@ -27,11 +27,12 @@ public:
 private:
     std::thread _thread;
     std::shared_ptr<CarFigure> _figure;
-    std::atomic<State> _state;
     const Line& _line;
 
     const int _color;
-    std::atomic<float> _progress;
+
+    std::atomic<State> _state = State::WAITING;
+    std::atomic<float> _progress = 0.0f;
 
     void assemble();
     void makeProgress();

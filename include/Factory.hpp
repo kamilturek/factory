@@ -12,12 +12,15 @@ public:
     ~Factory();
 
     bool isWorking() const;
+
     const std::array<Line, Config::linesCount>& getLines() const;
-    const std::vector<std::unique_ptr<Car>>& getCars() const;
 
     void setWorking(bool value);
 
-    std::mutex carCollectionMutex;
+    std::mutex carsMutex;
+    const std::vector<std::shared_ptr<Car>>& cars() const;
+
+    int completedCars() const;
 
 private:
     bool _isWorking;
@@ -26,8 +29,10 @@ private:
 
     Random _random;
 
+    std::atomic<int> _completedCars = 0;
+
     std::array<Line, Config::linesCount> _lines;
-    std::vector<std::unique_ptr<Car>> _cars;
+    std::vector<std::shared_ptr<Car>> _cars;
 
     void setupLines();
     void scheduleCars();

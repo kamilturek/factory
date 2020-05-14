@@ -4,7 +4,6 @@
 Car::Car(const Line& line, int color) :
     _thread(&Car::assemble, this),
     _figure(std::make_shared<CarFigure>(color)),
-    _state(State::WAITING),
     _line(line),
     _color(color)
 {
@@ -30,7 +29,7 @@ unsigned int Car::getLineNumber() const
     return _line.number;
 }
 
-State Car::getState() const
+State Car::state() const
 {
     return _state;
 }

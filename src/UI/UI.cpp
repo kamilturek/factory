@@ -76,7 +76,8 @@ void UI::initializeHelpWindow()
     _helpWindow = std::make_unique<Window>(width, height, x, y);
     _helpWindow->printAt(5, 0, "HELP");
     _helpWindow->printAt(1, 3, "[ESC] - EXIT PROGRAM");
-    _helpWindow->printAt(30, 3, "CARS IN THE FACTORY: ");
+    _helpWindow->printAt(30, 2, "COMPLETED: ");
+    _helpWindow->printAt(30, 3, "IN PROGRESS: ");
 }
 
 void UI::initializeColors()
@@ -165,44 +166,45 @@ void UI::refreshCars()
     std::array<int, Config::linesCount> awaitingCarsPerLine;
     awaitingCarsPerLine.fill(0);
 
-    std::lock_guard<std::mutex> lock(_factory->carCollectionMutex);
+    std::lock_guard<std::mutex> lock(_factory->carsMutex);
 
-    for (const auto& car : _factory->getCars())
+    for (const auto car : _factory->cars())
     {
+        const auto figure = car->figure();
 
-        if (car->getState() == State::WAITING)
+        if (car->state() == State::WAITING)
         {
             awaitingCarsPerLine.at(car->getLineNumber())++;
         }
-        else if (car->getState() == State::PHASE_ONE)
+        else if (car->state() == State::PHASE_ONE)
         {
             const auto machine = doubleMachineFigures.at(car->getLineNumber());
             if (!machine->isUpperStandTaken())
             {
-                car->figure()->moveTo(machine->x() + 3, machine->y() + 1);
+                figure->moveTo(machine->x() + 3, machine->y() + 1);
                 machine->setUpperStandTaken(true);
             }
             else
-                car->figure()->moveTo(machine->x() + 3, machine->y() + 6);
+                figure->moveTo(machine->x() + 3, machine->y() + 6);
         }
-        else if (car->getState() == State::PHASE_TWO)
+        else if (car->state() == State::PHASE_TWO)
         {
             const auto& machine = singleMachineFigures.at(car->getLineNumber());
-            car->figure()->moveTo(machine->x() + 3, machine->y() + 2);
+            figure->moveTo(machine->x() + 3, machine->y() + 2);
         }
-        else if (car->getState() == State::PHASE_THREE)
+        else if (car->state() == State::PHASE_THREE)
         {
             const auto machine = halfMachineFigures.at(car->getLineNumber());
-            car->figure()->moveTo(machine->x() + 3, machine->y() + 2);
+            figure->moveTo(machine->x() + 3, machine->y() + 2);
         }
-        else if (car->getState() == State::FINISHED)
+        else if (car->state() == State::FINISHED)
         {
-            car->figure()->hide();
+            figure->hide();
         }
         
-        if (car->getState() != State::WAITING && car->getState() != State::FINISHED)
+        if (car->state() != State::WAITING && car->state() != State::FINISHED)
         {
-            const int progress = car->progress() * 13;
+            const int progress = static_cast<int>(car->progress() * 13);
             
             wattron(car->figure()->raw(), A_REVERSE);
             wattron(car->figure()->raw(), car->figure()->color());
@@ -222,7 +224,7 @@ void UI::refreshCars()
         constexpr int offset = 7;
         constexpr int spacing = 12;
         constexpr int x = 18;
-        const int y = offset + i * spacing;
+        const int y = offset + static_cast<int>(i) * spacing;
         
         _mainWindow->printAt(x, y, "  ");
         _mainWindow->printAt(x, y, std::to_string(awaitingCarsPerLine.at(i)));
@@ -234,12 +236,12 @@ void UI::refreshHelpWindow()
     std::size_t carsCount;
 
     {
-        std::lock_guard<std::mutex> lock(_factory->carCollectionMutex);
-        carsCount = _factory->getCars().size();
+        std::lock_guard<std::mutex> lock(_factory->carsMutex);
+        carsCount = _factory->cars().size();
     }
 
-    constexpr int x = 51;
-    constexpr int y = 3;
-    _helpWindow->printAt(x, y, "   ");
-    _helpWindow->printAt(x, y, std::to_string(carsCount));
+    _helpWindow->printAt(46, 2, "   ");
+    _helpWindow->printAt(51, 3, "   ");
+    _helpWindow->printAt(41, 2, std::to_string(_factory->completedCars()));
+    _helpWindow->printAt(43, 3, std::to_string(carsCount));
 }
