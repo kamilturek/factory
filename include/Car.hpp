@@ -1,6 +1,7 @@
 #pragma once
 #include "CarFigure.hpp"
 #include "Line.hpp"
+#include "Random.hpp"
 #include "State.hpp"
 #include <atomic>
 #include <thread>
@@ -27,5 +28,8 @@ private:
     State _state;
     const Line& _line;
 
+    float _progress;
+
     void assemble();
+    void makeProgress();
 };

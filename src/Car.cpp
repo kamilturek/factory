@@ -36,20 +36,33 @@ void Car::assemble()
     _line.first->lock.acquire();
     _state = State::PHASE_ONE;
 
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    makeProgress();
 
     _line.second->mutex.lock();
     _line.first->lock.release();
     _state = State::PHASE_TWO;
 
-    std::this_thread::sleep_for(std::chrono::seconds(6));
+    makeProgress();
 
     {
         std::scoped_lock lock(_line.thirdOne->mutex, _line.thirdTwo->mutex);
         _state = State::PHASE_THREE;
         _line.second->mutex.unlock();
 
-        std::this_thread::sleep_for(std::chrono::seconds(4));
+        makeProgress();
+
         _state = State::FINISHED;
+    }
+}
+
+void Car::makeProgress()
+{
+    _progress = 0.0f;
+    const int delayCount = Random().randomInt(15, 50);
+
+    for (int i = 1; i <= delayCount; i++)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        _progress = static_cast<float>(i) / static_cast<float>(delayCount);
     }
 }
