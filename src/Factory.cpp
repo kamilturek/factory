@@ -59,8 +59,9 @@ const std::vector<std::unique_ptr<Car>>& Factory::getCars() const
 
 void Factory::createCar()
 {
-    const auto lineNumber = static_cast<std::size_t>(random.randomInt(0, Config::linesCount - 1));
+    const auto lineNumber = static_cast<std::size_t>(_random.randomInt(0, Config::linesCount - 1));
     const Line& line = _lines.at(lineNumber);
+    const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
 
-    _cars.push_back(std::make_unique<Car>(line));
+    _cars.push_back(std::make_unique<Car>(line, color));
 }

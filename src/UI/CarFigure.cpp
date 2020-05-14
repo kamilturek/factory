@@ -1,7 +1,7 @@
 #include "CarFigure.hpp"
 
-CarFigure::CarFigure() :
-    Window(_width, _height)
+CarFigure::CarFigure(int color) :
+    Window(_carWidth, _carHeight, color)
 {
 }
 

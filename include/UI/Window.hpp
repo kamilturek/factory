@@ -6,7 +6,7 @@
 class Window : public IWindow
 {
 public:
-    Window(int width, int height);
+    Window(int width, int height, int color);
     Window(int width, int height, int x, int y);
     virtual ~Window();
 
@@ -26,6 +26,7 @@ protected:
     int _height;
     int _x;
     int _y;
+    int _color;
 
     void draw();
     void erase();

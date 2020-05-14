@@ -4,12 +4,12 @@
 class CarFigure : public Window
 {
 public:
-    CarFigure();
+    CarFigure(int color);
 
     void moveTo(int x, int y);
     void hide();
 
 private:
-    static constexpr int _width = 15;
-    static constexpr int _height = 4;
+    static constexpr int _carWidth = 15;
+    static constexpr int _carHeight = 4;
 };

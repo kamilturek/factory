@@ -8,9 +8,11 @@ UI::UI(std::shared_ptr<Factory> factory) :
     curs_set(0);
     cbreak();
     noecho();
+    start_color();
 
     initializeMainWindow();
     initializeHelpWindow();
+    initializeColors();
 
     initializeDoubleMachineFigures();
     initializeSingleMachineFigures();
@@ -76,6 +78,17 @@ void UI::initializeHelpWindow()
     _helpWindow = std::make_unique<Window>(width, height, x, y);
     _helpWindow->printAt(5, 0, "HELP");
     _helpWindow->printAt(1, 3, "[ESC] - EXIT PROGRAM");
+}
+
+void UI::initializeColors()
+{
+    init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(4, COLOR_BLUE, COLOR_BLACK);
+    init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(6, COLOR_CYAN, COLOR_BLACK);
+    init_pair(7, COLOR_WHITE, COLOR_BLACK);
 }
 
 void UI::initializeDoubleMachineFigures()

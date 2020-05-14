@@ -1,11 +1,11 @@
 #include "Car.hpp"
 #include "Config.hpp"
 
-Car::Car(const Line& line) :
-    _state(State::WAITING),
+Car::Car(const Line& line, int color) :
     _thread(&Car::assemble, this),
-    _line(line),
-    _figure(std::make_unique<CarFigure>())
+    _figure(std::make_shared<CarFigure>(color)),
+    _state(State::WAITING),
+    _line(line)
 {
 }
 

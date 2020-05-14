@@ -44,6 +44,7 @@ private:
 
     void initializeMainWindow();
     void initializeHelpWindow();
+    void initializeColors();
 
     void refreshView();
     void refreshMachines();

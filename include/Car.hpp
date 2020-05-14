@@ -1,14 +1,14 @@
 #pragma once
+#include "CarFigure.hpp"
 #include "Line.hpp"
 #include "State.hpp"
-#include "CarFigure.hpp"
 #include <atomic>
 #include <thread>
 
 class Car
 {
 public:
-    explicit Car(const Line& line);
+    explicit Car(const Line& line, int color);
     Car(const Car&) = delete;
     Car(Car&&) = delete;
     virtual ~Car();

@@ -18,7 +18,7 @@ public:
 
 private:
     bool _isWorking;
-    Random random;
+    Random _random;
 
     std::array<Line, Config::linesCount> _lines;
     std::vector<std::unique_ptr<Car>> _cars;

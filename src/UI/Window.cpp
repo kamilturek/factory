@@ -1,10 +1,11 @@
 #include "Window.hpp"
+#include <iostream>
 
-Window::Window(int width, int height) : _width(width), _height(height), _x(_invisibleX), _y(_invisibleY)
+Window::Window(int width, int height, int color) : _width(width), _height(height), _x(_invisibleX), _y(_invisibleY), _color(color)
 {
 }
 
-Window::Window(int width, int height, int x, int y) : _width(width), _height(height), _x(x), _y(y)
+Window::Window(int width, int height, int x, int y) : _width(width), _height(height), _x(x), _y(y), _color(0)
 {
     draw();
     update();
@@ -53,7 +54,10 @@ WINDOW* Window::raw() const
 void Window::draw()
 {
     _window = newwin(_height, _width, _y, _x);
+
+    wattron(_window, COLOR_PAIR(_color));
     box(_window, 0, 0);
+    wattroff(_window, COLOR_PAIR(_color));
 }
 
 void Window::erase()
