@@ -25,7 +25,7 @@ float Car::progress() const
     return _progress;
 }
 
-unsigned int Car::getLineNumber() const
+unsigned int Car::line() const
 {
     return _line.number;
 }
@@ -43,7 +43,7 @@ void Car::assemble()
         return;
 
     // Double Machine
-    std::unique_lock<CountingLock> doubleMachineLock(_line.first->lock);
+    std::unique_lock<CountingMutex> doubleMachineLock(_line.first->lock);
     _state = State::PHASE_ONE;
     makeProgress();
 

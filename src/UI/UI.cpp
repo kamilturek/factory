@@ -173,11 +173,11 @@ void UI::refreshCars()
 
         if (car->state() == State::WAITING)
         {
-            awaitingCarsPerLine.at(car->getLineNumber())++;
+            awaitingCarsPerLine.at(car->line())++;
         }
         else if (car->state() == State::PHASE_ONE)
         {
-            const auto machine = doubleMachineFigures.at(car->getLineNumber());
+            const auto machine = doubleMachineFigures.at(car->line());
             if (!machine->isUpperStandTaken())
             {
                 figure->moveTo(machine->x() + 3, machine->y() + 1);
@@ -188,12 +188,12 @@ void UI::refreshCars()
         }
         else if (car->state() == State::PHASE_TWO)
         {
-            const auto& machine = singleMachineFigures.at(car->getLineNumber());
+            const auto& machine = singleMachineFigures.at(car->line());
             figure->moveTo(machine->x() + 3, machine->y() + 2);
         }
         else if (car->state() == State::PHASE_THREE)
         {
-            const auto machine = halfMachineFigures.at(car->getLineNumber());
+            const auto machine = halfMachineFigures.at(car->line());
             figure->moveTo(machine->x() + 3, machine->y() + 2);
         }
         else if (car->state() == State::FINISHED)

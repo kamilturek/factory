@@ -15,8 +15,7 @@ public:
     virtual ~Car();
 
     float progress() const;
-
-    unsigned int getLineNumber() const;
+    unsigned int line() const;
     State state() const;
 
     Car& operator=(const Car&) = delete;

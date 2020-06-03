@@ -1,5 +1,5 @@
 #pragma once
-#include "CountingLock.hpp"
+#include "CountingMutex.hpp"
 #include "DoubleMachineFigure.hpp"
 
 class DoubleMachine
@@ -7,5 +7,5 @@ class DoubleMachine
 public:
     DoubleMachine();
 
-    CountingLock lock;
+    CountingMutex lock;
 };

@@ -7,10 +7,10 @@
 
 // Meets C++ BasicLockable requirements
 
-class CountingLock
+class CountingMutex
 {
 public:
-    explicit CountingLock(int max);
+    explicit CountingMutex(int max);
 
     void lock();
     void unlock();

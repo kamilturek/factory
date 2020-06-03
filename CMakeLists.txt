@@ -32,7 +32,7 @@ add_executable(
   factory
   src/main.cpp
   src/Car.cpp
-  src/CountingLock.cpp
+  src/CountingMutex.cpp
   src/Factory.cpp
   src/DoubleMachine.cpp
   src/Random.cpp

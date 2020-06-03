@@ -1,10 +1,10 @@
-#include "CountingLock.hpp"
+#include "CountingMutex.hpp"
 
-CountingLock::CountingLock(int max) : count(max), maxCount(max)
+CountingMutex::CountingMutex(int max) : count(max), maxCount(max)
 {
 }
 
-void CountingLock::lock()
+void CountingMutex::lock()
 {
     std::unique_lock<std::mutex> lock(mutex);
     cv.wait(lock, [&]
@@ -18,7 +18,7 @@ void CountingLock::lock()
     });
 }
 
-void CountingLock::unlock()
+void CountingMutex::unlock()
 {
     std::unique_lock<std::mutex> lock(mutex);
 
