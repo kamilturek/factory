@@ -33,6 +33,7 @@ private:
 
     std::unique_ptr<Window> _mainWindow;
     std::unique_ptr<Window> _helpWindow;
+    std::unique_ptr<Window> _conservatorsWindow;
 
     std::shared_ptr<Factory> _factory;
 
@@ -46,6 +47,7 @@ private:
 
     void initializeMainWindow();
     void initializeHelpWindow();
+    void initializeConservatorsWindow();
     void initializeColors();
 
     void refreshView();

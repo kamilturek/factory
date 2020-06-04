@@ -13,6 +13,7 @@ UI::UI(std::shared_ptr<Factory> factory, const int refreshInterval) :
 
     initializeMainWindow();
     initializeHelpWindow();
+    initializeConservatorsWindow();
     initializeColors();
 
     initializeDoubleMachineFigures();
@@ -77,6 +78,17 @@ void UI::initializeHelpWindow()
     _helpWindow->printAt(1, 3, "[ESC] - EXIT PROGRAM");
     _helpWindow->printAt(30, 2, "COMPLETED: ");
     _helpWindow->printAt(30, 3, "IN PROGRESS: ");
+}
+
+void UI::initializeConservatorsWindow()
+{
+    constexpr int width = 70;
+    constexpr int height = 10;
+    constexpr int x = 165;
+    constexpr int y = 41;
+
+    _conservatorsWindow = std::make_unique<Window>(width, height, x, y);
+    _conservatorsWindow->printAt(5, 0 ,"CONSERVATORS");
 }
 
 void UI::initializeColors()
