@@ -22,6 +22,10 @@ public:
         {
             return !_queue.empty();
         });
+        
+        T value = _queue.front();
+        _queue.pop();
+        return value;
     }
 
 private:
