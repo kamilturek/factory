@@ -53,6 +53,7 @@ private:
     void refreshView();
     void refreshMachines();
     void refreshCars();
+    void refreshConservators();
     void refreshHelpWindow();
 
     void watchKeyboard();

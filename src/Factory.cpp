@@ -13,6 +13,7 @@ Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
     _carCollector(&Factory::collectCars, this)
 {
     setupLines();
+    setupConservators();
 }
 
 Factory::~Factory()
@@ -64,6 +65,23 @@ void Factory::setupLines()
     _lines.at(3).thirdTwo = std::make_shared<HalfMachine>();
 }
 
+void Factory::setupConservators()
+{
+    const std::array<std::pair<int, int>, 4> conservatorCoords{{
+        { 189, 44 },
+        { 200, 44 },
+        { 211, 44 },
+        { 222, 44 }
+    }};
+
+
+    for (std::size_t i = 0; i < conservatorCoords.size(); i++)
+    {
+        const auto coords = conservatorCoords.at(i);
+        _conservators.push_back(std::make_shared<Conservator>(coords.first, coords.second));
+    }
+}
+
 const std::array<Line, Config::linesCount>& Factory::getLines() const
 {
     return _lines;
@@ -72,6 +90,11 @@ const std::array<Line, Config::linesCount>& Factory::getLines() const
 const std::vector<std::shared_ptr<Car>>& Factory::cars() const
 {
     return _cars;
+}
+
+const std::vector<std::shared_ptr<Conservator>>& Factory::conservators() const
+{
+    return _conservators;
 }
 
 void Factory::scheduleCars()

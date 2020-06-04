@@ -1,6 +1,7 @@
 #pragma once
 #include "Car.hpp"
 #include "Config.hpp"
+#include "Conservator.hpp"
 #include "Line.hpp"
 #include "Random.hpp"
 #include <thread>
@@ -11,14 +12,15 @@ public:
     Factory(int carsNumber, int scheduleInterval, int collectionInterval);
     ~Factory();
 
+    int completedCars() const;
     bool isWorking() const;
     void setWorking(bool value);
 
     std::mutex carsMutex;
     const std::vector<std::shared_ptr<Car>>& cars() const;
+    const std::vector<std::shared_ptr<Conservator>>& conservators() const;
     const std::array<Line, Config::linesCount>& getLines() const;
 
-    int completedCars() const;
 
 private:
     const int _carsNumber;
@@ -36,8 +38,10 @@ private:
 
     std::array<Line, Config::linesCount> _lines;
     std::vector<std::shared_ptr<Car>> _cars;
+    std::vector<std::shared_ptr<Conservator>> _conservators;
 
     void setupLines();
+    void setupConservators();
     void scheduleCars();
     void collectCars();
 };

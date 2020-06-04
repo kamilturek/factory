@@ -82,10 +82,10 @@ void UI::initializeHelpWindow()
 
 void UI::initializeConservatorsWindow()
 {
-    constexpr int width = 70;
-    constexpr int height = 10;
-    constexpr int x = 165;
-    constexpr int y = 41;
+    constexpr int width = 49;
+    constexpr int height = 9;
+    constexpr int x = 186;
+    constexpr int y = 42;
 
     _conservatorsWindow = std::make_unique<Window>(width, height, x, y);
     _conservatorsWindow->printAt(5, 0 ,"CONSERVATORS");
@@ -151,6 +151,7 @@ void UI::refreshView()
     {
         refreshMachines();
         refreshCars();
+        refreshConservators();
         refreshHelpWindow();
         refresh();
         std::this_thread::sleep_for(std::chrono::milliseconds(_refreshInterval));
@@ -239,6 +240,14 @@ void UI::refreshCars()
         
         _mainWindow->printAt(x, y, "  ");
         _mainWindow->printAt(x, y, std::to_string(awaitingCarsPerLine.at(i)));
+    }
+}
+
+void UI::refreshConservators()
+{
+    for (const auto& conservator : _factory->conservators())
+    {
+        conservator->figure()->redraw();
     }
 }
 
