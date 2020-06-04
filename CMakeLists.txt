@@ -43,7 +43,8 @@ add_executable(
   src/UI/CarFigure.cpp
   src/UI/DoubleMachineFigure.cpp
   src/UI/HalfMachineFigure.cpp
-  src/UI/SingleMachineFigure.cpp)
+  src/UI/SingleMachineFigure.cpp
+  src/UI/TextWindow.cpp)
 target_link_libraries(factory PRIVATE warnings sanitizers ${CURSES_LIBRARIES}
                                       ${CMAKE_THREAD_LIBS_INIT})
 target_compile_features(factory PRIVATE cxx_std_17)

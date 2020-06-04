@@ -82,10 +82,10 @@ void UI::initializeHelpWindow()
 
 void UI::initializeConservatorsWindow()
 {
-    constexpr int width = 49;
-    constexpr int height = 9;
-    constexpr int x = 186;
-    constexpr int y = 42;
+    constexpr int width = 48;
+    constexpr int height = 5;
+    constexpr int x = 187;
+    constexpr int y = 46;
 
     _conservatorsWindow = std::make_unique<Window>(width, height, x, y);
     _conservatorsWindow->printAt(5, 0 ,"CONSERVATORS");

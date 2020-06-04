@@ -37,6 +37,16 @@ int Window::color() const
     return COLOR_PAIR(_color);
 }
 
+int Window::width() const
+{
+    return _width;
+}
+
+int Window::height() const
+{
+    return _height;
+}
+
 int Window::x() const
 {
     return _x;

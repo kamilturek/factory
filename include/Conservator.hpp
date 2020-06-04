@@ -1,17 +1,17 @@
 #pragma once
 #include <memory>
-#include "Window.hpp"
+#include "TextWindow.hpp"
 
 class Conservator
 {
 public:
-    Conservator(int x, int y);
+    Conservator(int x, int y, const std::string& name);
 
-    std::shared_ptr<Window> figure() const;
+    std::shared_ptr<TextWindow> figure() const;
 
 private:
     const int _x;
     const int _y;
 
-    std::shared_ptr<Window> _figure;
+    std::shared_ptr<TextWindow> _figure;
 };

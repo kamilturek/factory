@@ -67,18 +67,18 @@ void Factory::setupLines()
 
 void Factory::setupConservators()
 {
-    const std::array<std::pair<int, int>, 4> conservatorCoords{{
-        { 189, 44 },
-        { 200, 44 },
-        { 211, 44 },
-        { 222, 44 }
+    const std::array<std::tuple<int, int, std::string>, 4> conservatorData{{
+        { 190, 47, "Bob" },
+        { 201, 47, "Tom" },
+        { 212, 47, "Dan" },
+        { 223, 47, "Gus" }
     }};
 
 
-    for (std::size_t i = 0; i < conservatorCoords.size(); i++)
+    for (std::size_t i = 0; i < conservatorData.size(); i++)
     {
-        const auto coords = conservatorCoords.at(i);
-        _conservators.push_back(std::make_shared<Conservator>(coords.first, coords.second));
+        const auto data = conservatorData.at(i);
+        _conservators.push_back(std::make_shared<Conservator>(std::get<0>(data), std::get<1>(data), std::get<2>(data)));
     }
 }
 

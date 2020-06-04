@@ -11,6 +11,8 @@ public:
     virtual ~Window();
 
     int color() const;
+    int width() const;
+    int height() const;
     int x() const override;
     int y() const override;
     void redraw() override;

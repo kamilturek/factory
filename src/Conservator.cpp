@@ -1,11 +1,11 @@
 #include "Conservator.hpp"
 
-Conservator::Conservator(int x, int y) : _x(x), _y(y), _figure(std::make_shared<Window>(10, 5, _x, _y))
+Conservator::Conservator(int x, int y, const std::string& name) : _x(x), _y(y), _figure(std::make_shared<TextWindow>(9, 3, _x, _y, name))
 {
 
 }
 
-std::shared_ptr<Window> Conservator::figure() const
+std::shared_ptr<TextWindow> Conservator::figure() const
 {
     return _figure;
 }
