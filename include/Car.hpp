@@ -36,4 +36,5 @@ private:
 
     void assemble();
     void makeProgress();
+    void wearMachine(int wear);
 };

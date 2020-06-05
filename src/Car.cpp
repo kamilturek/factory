@@ -80,7 +80,33 @@ void Car::makeProgress()
         if (!_isFactoryWorking)
             return;
 
+        if (i % 2)
+            wearMachine(1);
+
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
         _progress = static_cast<float>(i) / static_cast<float>(delayCount);
+    }
+}
+
+void Car::wearMachine(int wear)
+{
+    std::vector<std::shared_ptr<Machine>> currentMachines;
+
+    if (_state == State::PHASE_ONE)
+        currentMachines.push_back(_line.first);
+    else if (_state == State::PHASE_TWO)
+        currentMachines.push_back(_line.second);
+    else if (_state == State::PHASE_THREE)
+    {
+        currentMachines.push_back(_line.thirdOne);
+        currentMachines.push_back(_line.thirdTwo);
+    }
+
+    for (const auto& machine : currentMachines)
+    {
+        if (machine->condition < wear)
+            machine->condition = 0;
+        else
+            machine->condition -= wear;
     }
 }

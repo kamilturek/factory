@@ -160,17 +160,41 @@ void UI::refreshView()
 
 void UI::refreshMachines()
 {
-    for (const auto& machine : doubleMachineFigures)
+    for (std::size_t i = 0; i < doubleMachineFigures.size(); i++)
     {
-        machine->setUpperStandTaken(false);
-        machine->redraw();
+        const auto& machine = _factory->getLines().at(i).first;
+        const auto& figure = doubleMachineFigures.at(i);
+        figure->setUpperStandTaken(false);
+        figure->redraw();
+        mvprintw(figure->y() + 5, figure->x() + 15, std::to_string(machine->condition).c_str());
+        printw("%%");
     }
 
-    for (const auto& machine : singleMachineFigures)
-        machine->redraw();
+    for (std::size_t i = 0; i < singleMachineFigures.size(); i++)
+    {
+        const auto& machine = _factory->getLines().at(i).second;
+        const auto& figure = singleMachineFigures.at(i);
+        figure->redraw();
+        mvprintw(figure->y() + 1, figure->x() + 15, std::to_string(machine->condition).c_str());
+        printw("%%");
+    }
 
-    for (const auto& machine : halfMachineFigures)
-        machine->redraw();
+    for (std::size_t i = 0; i < halfMachineFigures.size(); i++)
+    {
+        std::shared_ptr<HalfMachine> machine;
+        std::shared_ptr<HalfMachineFigure> figure;
+
+        if (i == halfMachineFigures.size() - 1)
+            machine = _factory->getLines().at(i - 1).thirdTwo;
+        else
+            machine = _factory->getLines().at(i).thirdOne;
+
+        figure = halfMachineFigures.at(i);
+
+        figure->redraw();
+        mvprintw(figure->y() + 1, figure->x() + 15, std::to_string(machine->condition).c_str());
+        printw("%%");
+    }
 }
 
 void UI::refreshCars()

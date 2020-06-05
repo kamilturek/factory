@@ -1,5 +1,5 @@
 #include "DoubleMachine.hpp"
 
-DoubleMachine::DoubleMachine() : lock(2)
+DoubleMachine::DoubleMachine() : Machine(),  lock(2)
 {
 }
