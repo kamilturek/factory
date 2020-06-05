@@ -35,6 +35,6 @@ private:
     std::atomic<float> _progress = 0.0f;
 
     void assemble();
-    void makeProgress();
-    void wearMachine(int wear);
+    void makeProgress(const std::vector<std::shared_ptr<Machine>>& currentMachines);
+    void wearMachine(const std::vector<std::shared_ptr<Machine>>& currentMachines, int wear);
 };
