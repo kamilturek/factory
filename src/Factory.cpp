@@ -132,3 +132,34 @@ void Factory::collectCars()
     std::lock_guard<std::mutex> lock(carsMutex);
     _cars.erase(_cars.begin(), _cars.end());
 }
+
+void Factory::inspectMachines()
+{
+    while (_isWorking)
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        for (const auto& line : _lines)
+        {
+            if (line.first->condition == 0)
+            {
+
+            }
+
+            if (line.second->condition == 0)
+            {
+
+            }
+
+            if (line.thirdOne->condition == 0)
+            {
+
+            }
+
+            if (line.thirdTwo->condition == 0)
+            {
+
+            }
+        }
+    }
+}

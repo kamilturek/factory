@@ -32,6 +32,7 @@ private:
 
     std::thread _carScheduler;
     std::thread _carCollector;
+    std::thread _machineInspector;
 
     Random _random;
 
@@ -44,4 +45,5 @@ private:
     void setupConservators();
     void scheduleCars();
     void collectCars();
+    void inspectMachines();
 };

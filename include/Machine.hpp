@@ -7,6 +7,7 @@ class Machine
 {
 public:
     std::mutex mutex;
+    std::mutex conservationMutex;
     std::condition_variable cv;
     std::atomic<int> condition = 100;
 };
