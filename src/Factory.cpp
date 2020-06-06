@@ -10,14 +10,17 @@ Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
     _scheduleInterval(scheduleInterval),
     _collectionInterval(collectionInterval),
     _carScheduler(&Factory::scheduleCars, this),
-    _carCollector(&Factory::collectCars, this)
+    _carCollector(&Factory::collectCars, this),
+    _machineInspector(&Factory::inspectMachines, this)
 {
     setupLines();
+    setupBrokenMachinesQueue();
     setupConservators();
 }
 
 Factory::~Factory()
 {
+    _machineInspector.join();
     _carCollector.join();
     _carScheduler.join();
     endwin();
@@ -65,6 +68,11 @@ void Factory::setupLines()
     _lines.at(3).thirdTwo = std::make_shared<HalfMachine>();
 }
 
+void Factory::setupBrokenMachinesQueue()
+{
+    _brokenMachines = std::make_shared<SafeQueue<std::shared_ptr<Machine>>>();
+}
+
 void Factory::setupConservators()
 {
     const std::array<std::tuple<int, int, std::string>, 4> conservatorData{{
@@ -78,7 +86,7 @@ void Factory::setupConservators()
     for (std::size_t i = 0; i < conservatorData.size(); i++)
     {
         const auto data = conservatorData.at(i);
-        _conservators.push_back(std::make_shared<Conservator>(std::get<0>(data), std::get<1>(data), std::get<2>(data)));
+        _conservators.push_back(std::make_shared<Conservator>(std::get<0>(data), std::get<1>(data), std::get<2>(data), _isWorking, _brokenMachines));
     }
 }
 
@@ -140,26 +148,8 @@ void Factory::inspectMachines()
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
         for (const auto& line : _lines)
-        {
-            if (line.first->condition == 0)
-            {
-
-            }
-
-            if (line.second->condition == 0)
-            {
-
-            }
-
-            if (line.thirdOne->condition == 0)
-            {
-
-            }
-
-            if (line.thirdTwo->condition == 0)
-            {
-
-            }
-        }
+            for (const auto& machine : line.machines())
+                if (machine->condition == 0)
+                    _brokenMachines->push(machine);
     }
 }

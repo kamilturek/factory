@@ -4,6 +4,7 @@
 #include "Conservator.hpp"
 #include "Line.hpp"
 #include "Random.hpp"
+#include "SafeQueue.hpp"
 #include <thread>
 
 class Factory
@@ -40,8 +41,10 @@ private:
     std::array<Line, Config::linesCount> _lines;
     std::vector<std::shared_ptr<Car>> _cars;
     std::vector<std::shared_ptr<Conservator>> _conservators;
+    std::shared_ptr<SafeQueue<std::shared_ptr<Machine>>> _brokenMachines;
 
     void setupLines();
+    void setupBrokenMachinesQueue();
     void setupConservators();
     void scheduleCars();
     void collectCars();

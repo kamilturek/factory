@@ -74,12 +74,17 @@ void Car::makeProgress(const std::vector<std::shared_ptr<Machine>>& currentMachi
 {
     _progress = 0.0f;
     const int delayCount = Random().randomInt(15, 50);
+    constexpr int wearDegree = 1;
 
     for (int i = 1; i <= delayCount; i++)
     {
+        // MAYBE TRY TO LOCK CONSERVATION MUTEX HERE
         while (_isFactoryWorking && std::any_of(currentMachines.begin(), currentMachines.end(), [](const auto& machine) {
             return machine->condition == 0;
-        })) {};
+        }))
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        };
 
         if (!_isFactoryWorking)
             return;
@@ -88,13 +93,13 @@ void Car::makeProgress(const std::vector<std::shared_ptr<Machine>>& currentMachi
         {
             std::lock_guard<std::mutex> lock(currentMachines.front()->conservationMutex);
             if (i % 2)
-                wearMachine(currentMachines, 1);
+                wearMachine(currentMachines, wearDegree);
         }
         else if (currentMachines.size() == 2)
         {
             std::scoped_lock lock(currentMachines.front()->conservationMutex, currentMachines.back()->conservationMutex);
             if (i % 2)
-                wearMachine(currentMachines, 1);
+                wearMachine(currentMachines, wearDegree);
         }
         
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
