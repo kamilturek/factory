@@ -28,8 +28,6 @@ public:
     const std::array<Line, Config::linesCount>& getLines() const;
 
     int nextSchedule() const;
-    int nextCollect() const;
-
 
 private:
     const int _carsNumber;
@@ -53,8 +51,6 @@ private:
     std::shared_ptr<SafeQueue<std::shared_ptr<Machine>>> _brokenMachines;
 
     std::chrono::time_point<std::chrono::system_clock> _scheduleTimestamp;
-    std::chrono::time_point<std::chrono::system_clock> _collectTimestamp;
-
 
     void setupLines();
     void setupBrokenMachinesQueue();

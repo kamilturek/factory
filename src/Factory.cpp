@@ -11,7 +11,6 @@ Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
     _collector(std::make_shared<Collector>(_state, _cars)),
     _carsNumber(carsNumber),
     _scheduleTimestamp(std::chrono::system_clock::now()),
-    _collectTimestamp(std::chrono::system_clock::now()),
     _scheduleInterval(scheduleInterval),
     _collectionInterval(collectionInterval),
     _carScheduler(&Factory::scheduleCars, this),
@@ -152,9 +151,4 @@ void Factory::inspectMachines()
 int Factory::nextSchedule() const
 {
     return _scheduleInterval - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _scheduleTimestamp).count();
-}
-
-int Factory::nextCollect() const
-{
-    return _collectionInterval - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _collectTimestamp).count();
 }
