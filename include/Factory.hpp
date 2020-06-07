@@ -4,6 +4,7 @@
 #include "Conservator.hpp"
 #include "Line.hpp"
 #include "Random.hpp"
+#include "MutexVector.hpp"
 #include "SafeQueue.hpp"
 #include <thread>
 
@@ -17,8 +18,7 @@ public:
     bool isWorking() const;
     void setWorking(bool value);
 
-    std::mutex carsMutex;
-    const std::vector<std::shared_ptr<Car>>& cars() const;
+    const std::shared_ptr<MutexVector<std::shared_ptr<Car>>>& cars() const;
     const std::vector<std::shared_ptr<Conservator>>& conservators() const;
     const std::array<Line, Config::linesCount>& getLines() const;
 
@@ -35,6 +35,7 @@ private:
     std::atomic<int> _completedCars = 0;
     
     std::shared_ptr<std::condition_variable> _collectorCv;
+    std::shared_ptr<MutexVector<std::shared_ptr<Car>>> _cars;
 
     std::thread _carScheduler;
     std::thread _carCollector;
@@ -44,7 +45,6 @@ private:
 
 
     std::array<Line, Config::linesCount> _lines;
-    std::vector<std::shared_ptr<Car>> _cars;
     std::vector<std::shared_ptr<Conservator>> _conservators;
     std::shared_ptr<SafeQueue<std::shared_ptr<Machine>>> _brokenMachines;
 

@@ -216,9 +216,9 @@ void UI::refreshCars()
     std::array<int, Config::linesCount> awaitingCarsPerLine;
     awaitingCarsPerLine.fill(0);
 
-    std::lock_guard<std::mutex> lock(_factory->carsMutex);
+    std::lock_guard<std::mutex> lock(_factory->cars()->mutex);
 
-    for (const auto car : _factory->cars())
+    for (const auto car : *_factory->cars())
     {
         const auto figure = car->figure();
 
@@ -298,8 +298,8 @@ void UI::refreshHelpWindow()
     std::size_t carsCount;
 
     {
-        std::lock_guard<std::mutex> lock(_factory->carsMutex);
-        carsCount = _factory->cars().size();
+        std::lock_guard<std::mutex> lock(_factory->cars()->mutex);
+        carsCount = _factory->cars()->size();
     }
 
     _helpWindow->printAt(46, 2, "   ");
