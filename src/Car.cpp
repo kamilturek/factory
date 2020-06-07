@@ -1,7 +1,9 @@
 #include "Car.hpp"
 #include "Config.hpp"
+#include <exception>
 
-Car::Car(const Line& line, int color, const std::atomic<bool>& isFactoryWorking) :
+Car::Car(const Line& line, int color, const std::atomic<bool>& isFactoryWorking, const std::shared_ptr<std::condition_variable>& collectorCv) :
+    _collectorCv(collectorCv),
     _thread(&Car::assemble, this),
     _figure(std::make_shared<CarFigure>(color)),
     _line(line),
@@ -67,6 +69,7 @@ void Car::assemble()
         makeProgress({ _line.thirdOne, _line.thirdTwo });
 
         _state = State::FINISHED;
+        _collectorCv->notify_one();
     }
 }
 

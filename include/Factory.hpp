@@ -33,6 +33,8 @@ private:
 
     std::atomic<bool> _isWorking = true;
     std::atomic<int> _completedCars = 0;
+    
+    std::shared_ptr<std::condition_variable> _collectorCv;
 
     std::thread _carScheduler;
     std::thread _carCollector;
@@ -48,6 +50,7 @@ private:
 
     std::chrono::time_point<std::chrono::system_clock> _scheduleTimestamp;
     std::chrono::time_point<std::chrono::system_clock> _collectTimestamp;
+
 
     void setupLines();
     void setupBrokenMachinesQueue();

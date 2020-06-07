@@ -9,6 +9,7 @@ Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
     _carsNumber(carsNumber),
     _scheduleTimestamp(std::chrono::system_clock::now()),
     _collectTimestamp(std::chrono::system_clock::now()),
+    _collectorCv(std::make_shared<std::condition_variable>()),
     _scheduleInterval(scheduleInterval),
     _collectionInterval(collectionInterval),
     _carScheduler(&Factory::scheduleCars, this),
@@ -121,8 +122,8 @@ void Factory::scheduleCars()
                     const auto lineNumber = static_cast<std::size_t>(_random.randomInt(0, Config::linesCount - 1));
                     const Line& line = _lines.at(lineNumber);
                     const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
-        
-                    _cars.push_back(std::make_shared<Car>(line, color, _isWorking));
+
+                    _cars.push_back(std::make_shared<Car>(line, color, _isWorking, _collectorCv));
                 }
             }
         }
@@ -134,10 +135,14 @@ void Factory::collectCars()
 {
     while (_isWorking)
     {
-        // HERE USE CONDITION VARIABLE
-        std::this_thread::sleep_for(std::chrono::milliseconds(_collectionInterval));
-
-        std::lock_guard<std::mutex> lock(carsMutex);
+        std::unique_lock<std::mutex> lock(carsMutex);
+        _collectorCv->wait(lock, [&]()
+        {
+            return std::any_of(_cars.begin(), _cars.end(), [](const auto& car)
+            {
+                return car->state() == State::FINISHED;
+            });
+        });
         _collectTimestamp = std::chrono::system_clock::now();
         const auto completedBegin = std::remove_if(_cars.begin(), _cars.end(), [](const auto& car) { return car->state() == State::FINISHED; });
         _completedCars += static_cast<int>(std::distance(completedBegin, _cars.end()));

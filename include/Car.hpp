@@ -9,7 +9,7 @@
 class Car
 {
 public:
-    explicit Car(const Line& line, int color, const std::atomic<bool>& isFactoryWorking);
+    explicit Car(const Line& line, int color, const std::atomic<bool>& isFactoryWorking, const std::shared_ptr<std::condition_variable>& collectorCv);
     Car(const Car&) = delete;
     Car(Car&&) = delete;
     virtual ~Car();
@@ -24,6 +24,7 @@ public:
     std::shared_ptr<CarFigure> figure() const;
 
 private:
+    std::shared_ptr<std::condition_variable> _collectorCv;
     std::thread _thread;
     std::shared_ptr<CarFigure> _figure;
     const Line& _line;
