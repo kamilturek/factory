@@ -14,6 +14,7 @@ UI::UI(std::shared_ptr<Factory> factory, const int refreshInterval) :
     initializeMainWindow();
     initializeHelpWindow();
     initializeConservatorsWindow();
+    initializeInspectorsWindow();
     initializeColors();
 
     initializeDoubleMachineFigures();
@@ -91,6 +92,17 @@ void UI::initializeConservatorsWindow()
     _conservatorsWindow->printAt(5, 0 ,"CONSERVATORS");
 }
 
+void UI::initializeInspectorsWindow()
+{
+    constexpr int width = 48;
+    constexpr int height = 5;
+    constexpr int x = 138;
+    constexpr int y = 46;
+
+    _inspectorsWindow = std::make_unique<Window>(width, height, x, y);
+    _inspectorsWindow->printAt(5, 0 ,"INSPECTORS");
+}
+
 void UI::initializeColors()
 {
     init_pair(1, COLOR_RED, COLOR_BLACK);
@@ -111,7 +123,7 @@ void UI::initializeDoubleMachineFigures()
         constexpr int x = 20;
         const int y = offset + i * spacing;
 
-        const auto machine = _factory->getLines().at(i).first;
+        const auto machine = _factory->getLines().at(static_cast<std::size_t>(i)).first;
         machine->x = x;
         machine->y = y;
         doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(x, y, i + 1));
@@ -127,7 +139,7 @@ void UI::initializeSingleMachineFigures()
         constexpr int x = 110;
         const int y = offset + i * spacing;
 
-        const auto machine = _factory->getLines().at(i).second;
+        const auto machine = _factory->getLines().at(static_cast<std::size_t>(i)).second;
         machine->x = x;
         machine->y = y;
         singleMachineFigures.push_back(std::make_unique<SingleMachineFigure>(x, y, i + 1));
@@ -148,10 +160,10 @@ void UI::initializeHalfMachineFigures()
         if (i == Config::linesCount)
         {
             hasStandBelow = false;
-            machine = _factory->getLines().at(i - 1).thirdTwo;
+            machine = _factory->getLines().at(static_cast<std::size_t>(i) - 1).thirdTwo;
         }
         else
-            machine = _factory->getLines().at(i).thirdOne;
+            machine = _factory->getLines().at(static_cast<std::size_t>(i)).thirdOne;
 
         machine->x = x;
         machine->y = y;
@@ -166,6 +178,7 @@ void UI::refreshView()
         refreshMachines();
         refreshCars();
         refreshConservators();
+        refreshInspectors();
         refreshHelpWindow();
         refresh();
         std::this_thread::sleep_for(std::chrono::milliseconds(_refreshInterval));
@@ -283,13 +296,25 @@ void UI::refreshCars()
 
 void UI::refreshConservators()
 {
-    for (const auto& conservator : _factory->conservators())
+    for (const auto conservator : _factory->conservators())
     {
         if (conservator->figure()->x() != conservator->x() && conservator->figure()->y() != conservator->y())
         {
             conservator->figure()->moveTo(conservator->x(), conservator->y());
         }
         conservator->figure()->redraw();
+    }
+}
+
+void UI::refreshInspectors()
+{
+    for (const auto inspector : _factory->inspectors())
+    {
+        if (inspector->figure()->x() != inspector->x() && inspector->figure()->y() != inspector->y())
+        {
+            inspector->figure()->moveTo(inspector->x(), inspector->y());
+        }
+        inspector->figure()->redraw();
     }
 }
 

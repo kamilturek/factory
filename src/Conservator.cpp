@@ -1,5 +1,4 @@
 #include "Conservator.hpp"
-#include <iostream>
 
 Conservator::Conservator(int x, int y, const std::string& name,
   const std::shared_ptr<const FactoryState>& factoryState,
@@ -9,9 +8,9 @@ Conservator::Conservator(int x, int y, const std::string& name,
     _startX(x),
     _startY(y),
     _factoryState(factoryState),
-    _thread(&Conservator::work, this),
-    _figure(std::make_shared<TextWindow>(9, 3, _x, _y, name)),
-    _brokenMachines(brokenMachines)
+    _brokenMachines(brokenMachines),
+    _figure(std::make_shared<TextWindow>(9, 3, _x, _y, name, true)),
+    _thread(&Conservator::work, this)
 {
 }
 
@@ -27,8 +26,6 @@ std::shared_ptr<TextWindow> Conservator::figure() const
 
 void Conservator::work()
 {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
     while (_factoryState->isWorking)
     {
         const auto& machine = _brokenMachines->pop();

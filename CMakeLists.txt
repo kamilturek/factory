@@ -38,6 +38,7 @@ add_executable(
   src/Factory.cpp
   src/FactoryState.cpp
   src/DoubleMachine.cpp
+  src/Inspector.cpp
   src/Random.cpp
   src/UI/UI.cpp
   src/UI/Window.cpp

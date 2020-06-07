@@ -9,21 +9,20 @@ Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
     _state(std::make_shared<FactoryState>(true)),
     _cars(std::make_shared<MutexVector<std::shared_ptr<Car>>>()),
     _collector(std::make_shared<Collector>(_state, _cars)),
+    _brokenMachines(std::make_shared<SafeQueue<std::shared_ptr<Machine>>>()),
     _carsNumber(carsNumber),
     _scheduleTimestamp(std::chrono::system_clock::now()),
     _scheduleInterval(scheduleInterval),
     _collectionInterval(collectionInterval),
-    _carScheduler(&Factory::scheduleCars, this),
-    _machineInspector(&Factory::inspectMachines, this)
+    _carScheduler(&Factory::scheduleCars, this)
 {
     setupLines();
-    setupBrokenMachinesQueue();
     setupConservators();
+    setupInspectors();
 }
 
 Factory::~Factory()
 {
-    _machineInspector.join();
     _carScheduler.join();
     endwin();
 }
@@ -70,11 +69,6 @@ void Factory::setupLines()
     _lines.at(3).thirdTwo = std::make_shared<HalfMachine>();
 }
 
-void Factory::setupBrokenMachinesQueue()
-{
-    _brokenMachines = std::make_shared<SafeQueue<std::shared_ptr<Machine>>>();
-}
-
 void Factory::setupConservators()
 {
     const std::array<std::tuple<int, int, std::string>, 4> conservatorData{{
@@ -89,6 +83,23 @@ void Factory::setupConservators()
     {
         const auto data = conservatorData.at(i);
         _conservators.push_back(std::make_shared<Conservator>(std::get<0>(data), std::get<1>(data), std::get<2>(data), _state, _brokenMachines));
+    }
+}
+
+void Factory::setupInspectors()
+{
+    const std::array<std::tuple<int, int, std::string>, 4> inspectorData{{
+        { 141, 47, "IN1" },
+        { 152, 47, "IN2" },
+        { 163, 47, "IN3" },
+        { 174, 47, "IN4" }
+    }};
+
+
+    for (std::size_t i = 0; i < inspectorData.size(); i++)
+    {
+        const auto data = inspectorData.at(i);
+        _inspectors.push_back(std::make_shared<Inspector>(std::get<0>(data), std::get<1>(data), std::get<2>(data), _lines.at(i), _state, _brokenMachines));
     }
 }
 
@@ -112,6 +123,11 @@ const std::vector<std::shared_ptr<Conservator>>& Factory::conservators() const
     return _conservators;
 }
 
+const std::vector<std::shared_ptr<Inspector>>& Factory::inspectors() const
+{
+    return _inspectors;
+}
+
 void Factory::scheduleCars()
 {
     while (_state->isWorking)
@@ -132,19 +148,6 @@ void Factory::scheduleCars()
             }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(_scheduleInterval));
-    }
-}
-
-void Factory::inspectMachines()
-{
-    while (_state->isWorking)
-    {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        for (const auto& line : _lines)
-            for (const auto& machine : line.machines())
-                if (machine->condition == 0)
-                    _brokenMachines->push(machine);
     }
 }
 

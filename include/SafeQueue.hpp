@@ -3,7 +3,7 @@
 #include <mutex>
 #include <queue>
 
-template <class T>
+template<class T>
 class SafeQueue
 {
 public:
@@ -12,7 +12,7 @@ public:
         std::unique_lock<std::mutex> lock(_mutex);
         _queue.push(value);
         lock.unlock();
-        _cv.notify_one();       
+        _cv.notify_one();
     }
 
     T pop()
@@ -22,7 +22,7 @@ public:
         {
             return !_queue.empty();
         });
-        
+
         T value = _queue.front();
         _queue.pop();
         return value;

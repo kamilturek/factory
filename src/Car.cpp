@@ -77,7 +77,7 @@ void Car::makeProgress(const std::vector<std::shared_ptr<Machine>>& currentMachi
 {
     _progress = 0.0f;
     const int delayCount = Random().randomInt(15, 50);
-    constexpr int wearDegree = 1;
+    constexpr int wearDegree = 2;
 
     for (int i = 1; i <= delayCount; i++)
     {
