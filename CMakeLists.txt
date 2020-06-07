@@ -32,6 +32,7 @@ add_executable(
   factory
   src/main.cpp
   src/Car.cpp
+  src/Collector.cpp
   src/Conservator.cpp
   src/CountingMutex.cpp
   src/Factory.cpp

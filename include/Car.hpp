@@ -5,12 +5,13 @@
 #include "Random.hpp"
 #include "State.hpp"
 #include <atomic>
+#include <functional>
 #include <thread>
 
 class Car
 {
 public:
-    explicit Car(const Line& line, int color, const std::shared_ptr<const FactoryState>& factoryState, const std::shared_ptr<std::condition_variable>& collectorCv);
+    explicit Car(const Line& line, int color, const std::shared_ptr<const FactoryState>& factoryState, std::function<void()> notifier);
     Car(const Car&) = delete;
     Car(Car&&) = delete;
     virtual ~Car();
@@ -26,7 +27,7 @@ public:
 
 private:
     std::shared_ptr<const FactoryState> _factoryState;
-    std::shared_ptr<std::condition_variable> _collectorCv;
+    std::function<void()> _notifier;
     std::thread _thread;
     std::shared_ptr<CarFigure> _figure;
     const Line& _line;

@@ -8,14 +8,13 @@
 Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
     _state(std::make_shared<FactoryState>(true)),
     _cars(std::make_shared<MutexVector<std::shared_ptr<Car>>>()),
+    _collector(std::make_shared<Collector>(_state, _cars)),
     _carsNumber(carsNumber),
     _scheduleTimestamp(std::chrono::system_clock::now()),
     _collectTimestamp(std::chrono::system_clock::now()),
-    _collectorCv(std::make_shared<std::condition_variable>()),
     _scheduleInterval(scheduleInterval),
     _collectionInterval(collectionInterval),
     _carScheduler(&Factory::scheduleCars, this),
-    _carCollector(&Factory::collectCars, this),
     _machineInspector(&Factory::inspectMachines, this)
 {
     setupLines();
@@ -26,14 +25,13 @@ Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
 Factory::~Factory()
 {
     _machineInspector.join();
-    _carCollector.join();
     _carScheduler.join();
     endwin();
 }
 
-int Factory::completedCars() const
+unsigned int Factory::completedCars() const
 {
-    return _completedCars;
+    return _collector->collectedCount();
 }
 
 void Factory::run()
@@ -130,34 +128,12 @@ void Factory::scheduleCars()
                     const Line& line = _lines.at(lineNumber);
                     const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
 
-                    _cars->push_back(std::make_shared<Car>(line, color, _state, _collectorCv));
+                    _cars->push_back(std::make_shared<Car>(line, color, _state, std::bind(&Collector::notify, _collector)));
                 }
             }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(_scheduleInterval));
     }
-}
-
-void Factory::collectCars()
-{
-    while (_state->isWorking)
-    {
-        std::unique_lock<std::mutex> lock(_cars->mutex);
-        _collectorCv->wait(lock, [&]()
-        {
-            return std::any_of(_cars->begin(), _cars->end(), [](const auto& car)
-            {
-                return car->state() == State::FINISHED;
-            });
-        });
-        _collectTimestamp = std::chrono::system_clock::now();
-        const auto completedBegin = std::remove_if(_cars->begin(), _cars->end(), [](const auto& car) { return car->state() == State::FINISHED; });
-        _completedCars += static_cast<int>(std::distance(completedBegin, _cars->end()));
-        _cars->erase(completedBegin, _cars->end());
-    }
-
-    std::lock_guard<std::mutex> lock(_cars->mutex);
-    _cars->erase(_cars->begin(), _cars->end());
 }
 
 void Factory::inspectMachines()

@@ -1,5 +1,6 @@
 #pragma once
 #include "Car.hpp"
+#include "Collector.hpp"
 #include "Config.hpp"
 #include "Conservator.hpp"
 #include "FactoryState.hpp"
@@ -7,6 +8,7 @@
 #include "MutexVector.hpp"
 #include "Random.hpp"
 #include "SafeQueue.hpp"
+#include <functional>
 #include <thread>
 
 class Factory
@@ -15,8 +17,8 @@ public:
     Factory(int carsNumber, int scheduleInterval, int collectionInterval);
     ~Factory();
 
-    int completedCars() const;
-    
+    unsigned int completedCars() const;
+
     void run();
     void stop();
 
@@ -36,12 +38,11 @@ private:
 
     std::atomic<int> _completedCars = 0;
 
-    std::shared_ptr<std::condition_variable> _collectorCv;
     std::shared_ptr<FactoryState> _state;
     std::shared_ptr<MutexVector<std::shared_ptr<Car>>> _cars;
+    std::shared_ptr<Collector> _collector;
 
     std::thread _carScheduler;
-    std::thread _carCollector;
     std::thread _machineInspector;
 
     Random _random;
@@ -59,6 +60,5 @@ private:
     void setupBrokenMachinesQueue();
     void setupConservators();
     void scheduleCars();
-    void collectCars();
     void inspectMachines();
 };
