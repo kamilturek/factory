@@ -5,7 +5,7 @@ Window::Window(int width, int height, int color) : _width(width), _height(height
 {
 }
 
-Window::Window(int width, int height, int x, int y) : _width(width), _height(height), _x(x), _y(y), _color(0), _endwin(true)
+Window::Window(int width, int height, int x, int y) : _width(width), _height(height), _x(x), _y(y), _startX(x), _startY(y), _color(0), _endwin(true)
 {
     draw();
     update();
@@ -83,4 +83,21 @@ void Window::erase()
     wrefresh(_window);
     delwin(_window);
     _window = nullptr;
+}
+
+void Window::moveTo(int x, int y)
+{
+    _x = x;
+    _y = y;
+    redraw();
+}
+
+void Window::hide()
+{
+    moveTo(_invisibleX, _invisibleY);
+}
+
+void Window::reset()
+{
+    moveTo(_startX, _startY);
 }

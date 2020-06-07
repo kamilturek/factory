@@ -111,6 +111,9 @@ void UI::initializeDoubleMachineFigures()
         constexpr int x = 20;
         const int y = offset + i * spacing;
 
+        const auto machine = _factory->getLines().at(i).first;
+        machine->x = x;
+        machine->y = y;
         doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(x, y, i + 1));
     }
 }
@@ -124,6 +127,9 @@ void UI::initializeSingleMachineFigures()
         constexpr int x = 110;
         const int y = offset + i * spacing;
 
+        const auto machine = _factory->getLines().at(i).second;
+        machine->x = x;
+        machine->y = y;
         singleMachineFigures.push_back(std::make_unique<SingleMachineFigure>(x, y, i + 1));
     }
 }
@@ -138,9 +144,17 @@ void UI::initializeHalfMachineFigures()
         const int y = offset + i * spacing;
         bool hasStandBelow = true;
 
+        std::shared_ptr<Machine> machine;
         if (i == Config::linesCount)
+        {
             hasStandBelow = false;
+            machine = _factory->getLines().at(i - 1).thirdTwo;
+        }
+        else
+            machine = _factory->getLines().at(i).thirdOne;
 
+        machine->x = x;
+        machine->y = y;
         halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(x, y, hasStandBelow, i + 1));
     }
 }
@@ -271,6 +285,10 @@ void UI::refreshConservators()
 {
     for (const auto& conservator : _factory->conservators())
     {
+        if (conservator->figure()->x() != conservator->x() && conservator->figure()->y() != conservator->y())
+        {
+            conservator->figure()->moveTo(conservator->x(), conservator->y());
+        }
         conservator->figure()->redraw();
     }
 }

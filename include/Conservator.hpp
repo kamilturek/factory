@@ -15,10 +15,14 @@ public:
     ~Conservator();
 
     std::shared_ptr<TextWindow> figure() const;
+    int x() const;
+    int y() const;
 
 private:
-    const int _x;
-    const int _y;
+    std::atomic<int> _x;
+    std::atomic<int> _y;
+    const int _startX;
+    const int _startY;
 
     const std::atomic<bool>& _isFactoryWorking;
     std::thread _thread;

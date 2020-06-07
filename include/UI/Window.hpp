@@ -17,6 +17,9 @@ public:
     int y() const override;
     void redraw() override;
     void update() override;
+    void hide();
+    void reset();
+    void moveTo(int x, int y);
     void printAt(int x, int y, const std::string& text);
 
     WINDOW* raw() const;
@@ -29,6 +32,8 @@ protected:
     int _height;
     int _x;
     int _y;
+    int _startX;
+    int _startY;
     int _color;
     bool _endwin;
 
