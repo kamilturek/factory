@@ -2,10 +2,16 @@
 #include <iostream>
 
 Conservator::Conservator(int x, int y, const std::string& name,
-  const std::atomic<bool>& isFactoryWorking,
+  const std::shared_ptr<const FactoryState>& factoryState,
   const std::shared_ptr<SafeQueue<std::shared_ptr<Machine>>>& brokenMachines) :
     _x(x),
-    _y(y), _startX(x), _startY(y), _isFactoryWorking(isFactoryWorking), _thread(&Conservator::work, this), _figure(std::make_shared<TextWindow>(9, 3, _x, _y, name)), _brokenMachines(brokenMachines)
+    _y(y),
+    _startX(x),
+    _startY(y),
+    _factoryState(factoryState),
+    _thread(&Conservator::work, this),
+    _figure(std::make_shared<TextWindow>(9, 3, _x, _y, name)),
+    _brokenMachines(brokenMachines)
 {
 }
 
@@ -23,7 +29,7 @@ void Conservator::work()
 {
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    while (_isFactoryWorking)
+    while (_factoryState->isWorking)
     {
         const auto& machine = _brokenMachines->pop();
         std::lock_guard<std::mutex> lock(machine->conservationMutex);

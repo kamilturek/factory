@@ -32,7 +32,7 @@ UI::~UI()
 
 void UI::watchKeyboard()
 {
-    while (_factory->isWorking())
+    while (_factory->state()->isWorking)
     {
         int keyPressed = wgetch(stdscr);
 
@@ -40,7 +40,7 @@ void UI::watchKeyboard()
         {
         // ESCAPE KEY
         case 27:
-            _factory->setWorking(false);
+            _factory->stop();
             break;
         }
     }
@@ -161,7 +161,7 @@ void UI::initializeHalfMachineFigures()
 
 void UI::refreshView()
 {
-    while (_factory->isWorking())
+    while (_factory->state()->isWorking)
     {
         refreshMachines();
         refreshCars();

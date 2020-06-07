@@ -18,7 +18,7 @@ void run()
     UI ui(factory, refreshInterval);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    while (factory->isWorking());
+    while (factory->state()->isWorking);
 }
 
 int main(int argc, char** argv)

@@ -6,6 +6,7 @@
 #include <memory>
 
 Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
+    _state(std::make_shared<FactoryState>(true)),
     _cars(std::make_shared<MutexVector<std::shared_ptr<Car>>>()),
     _carsNumber(carsNumber),
     _scheduleTimestamp(std::chrono::system_clock::now()),
@@ -35,14 +36,14 @@ int Factory::completedCars() const
     return _completedCars;
 }
 
-bool Factory::isWorking() const
+void Factory::run()
 {
-    return _isWorking;
+    _state->isWorking = true;
 }
 
-void Factory::setWorking(bool value)
+void Factory::stop()
 {
-    _isWorking = value;
+    _state->isWorking = false;
 }
 
 void Factory::setupLines()
@@ -90,13 +91,18 @@ void Factory::setupConservators()
     for (std::size_t i = 0; i < conservatorData.size(); i++)
     {
         const auto data = conservatorData.at(i);
-        _conservators.push_back(std::make_shared<Conservator>(std::get<0>(data), std::get<1>(data), std::get<2>(data), _isWorking, _brokenMachines));
+        _conservators.push_back(std::make_shared<Conservator>(std::get<0>(data), std::get<1>(data), std::get<2>(data), _state, _brokenMachines));
     }
 }
 
 const std::array<Line, Config::linesCount>& Factory::getLines() const
 {
     return _lines;
+}
+
+std::shared_ptr<const FactoryState> Factory::state() const
+{
+    return _state;
 }
 
 const std::shared_ptr<MutexVector<std::shared_ptr<Car>>>& Factory::cars() const
@@ -111,7 +117,7 @@ const std::vector<std::shared_ptr<Conservator>>& Factory::conservators() const
 
 void Factory::scheduleCars()
 {
-    while (_isWorking)
+    while (_state->isWorking)
     {
         {
             std::lock_guard<std::mutex> lock(_cars->mutex);
@@ -124,7 +130,7 @@ void Factory::scheduleCars()
                     const Line& line = _lines.at(lineNumber);
                     const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
 
-                    _cars->push_back(std::make_shared<Car>(line, color, _isWorking, _collectorCv));
+                    _cars->push_back(std::make_shared<Car>(line, color, _state, _collectorCv));
                 }
             }
         }
@@ -134,7 +140,7 @@ void Factory::scheduleCars()
 
 void Factory::collectCars()
 {
-    while (_isWorking)
+    while (_state->isWorking)
     {
         std::unique_lock<std::mutex> lock(_cars->mutex);
         _collectorCv->wait(lock, [&]()
@@ -156,7 +162,7 @@ void Factory::collectCars()
 
 void Factory::inspectMachines()
 {
-    while (_isWorking)
+    while (_state->isWorking)
     {
         std::this_thread::sleep_for(std::chrono::seconds(1));
 

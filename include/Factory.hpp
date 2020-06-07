@@ -2,9 +2,10 @@
 #include "Car.hpp"
 #include "Config.hpp"
 #include "Conservator.hpp"
+#include "FactoryState.hpp"
 #include "Line.hpp"
-#include "Random.hpp"
 #include "MutexVector.hpp"
+#include "Random.hpp"
 #include "SafeQueue.hpp"
 #include <thread>
 
@@ -15,9 +16,11 @@ public:
     ~Factory();
 
     int completedCars() const;
-    bool isWorking() const;
-    void setWorking(bool value);
+    
+    void run();
+    void stop();
 
+    std::shared_ptr<const FactoryState> state() const;
     const std::shared_ptr<MutexVector<std::shared_ptr<Car>>>& cars() const;
     const std::vector<std::shared_ptr<Conservator>>& conservators() const;
     const std::array<Line, Config::linesCount>& getLines() const;
@@ -31,10 +34,10 @@ private:
     const int _scheduleInterval;
     const int _collectionInterval;
 
-    std::atomic<bool> _isWorking = true;
     std::atomic<int> _completedCars = 0;
-    
+
     std::shared_ptr<std::condition_variable> _collectorCv;
+    std::shared_ptr<FactoryState> _state;
     std::shared_ptr<MutexVector<std::shared_ptr<Car>>> _cars;
 
     std::thread _carScheduler;

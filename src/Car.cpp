@@ -2,13 +2,13 @@
 #include "Config.hpp"
 #include <exception>
 
-Car::Car(const Line& line, int color, const std::atomic<bool>& isFactoryWorking, const std::shared_ptr<std::condition_variable>& collectorCv) :
+Car::Car(const Line& line, int color, const std::shared_ptr<const FactoryState>& factoryState, const std::shared_ptr<std::condition_variable>& collectorCv) :
+    _factoryState(factoryState),
     _collectorCv(collectorCv),
     _thread(&Car::assemble, this),
     _figure(std::make_shared<CarFigure>(color)),
     _line(line),
-    _color(color),
-    _isFactoryWorking(isFactoryWorking)
+    _color(color)
 {
 }
 
@@ -41,7 +41,7 @@ void Car::assemble()
 {
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    if (!_isFactoryWorking)
+    if (!_factoryState->isWorking)
         return;
 
     // Double Machine
@@ -49,7 +49,7 @@ void Car::assemble()
     _state = State::PHASE_ONE;
     makeProgress({ _line.first });
 
-    if (!_isFactoryWorking)
+    if (!_factoryState->isWorking)
         return;
 
     // Single Machine
@@ -58,7 +58,7 @@ void Car::assemble()
     doubleMachineLock.unlock();
     makeProgress({ _line.second });
 
-    if (!_isFactoryWorking)
+    if (!_factoryState->isWorking)
         return;
 
     // Half Machine
@@ -81,14 +81,14 @@ void Car::makeProgress(const std::vector<std::shared_ptr<Machine>>& currentMachi
 
     for (int i = 1; i <= delayCount; i++)
     {
-        while (_isFactoryWorking && std::any_of(currentMachines.begin(), currentMachines.end(), [](const auto& machine) {
+        while (_factoryState->isWorking && std::any_of(currentMachines.begin(), currentMachines.end(), [](const auto& machine) {
             return machine->condition == 0;
         }))
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
         };
 
-        if (!_isFactoryWorking)
+        if (!_factoryState->isWorking)
             return;
 
         if (currentMachines.size() == 1)

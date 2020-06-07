@@ -35,6 +35,7 @@ add_executable(
   src/Conservator.cpp
   src/CountingMutex.cpp
   src/Factory.cpp
+  src/FactoryState.cpp
   src/DoubleMachine.cpp
   src/Random.cpp
   src/UI/UI.cpp
