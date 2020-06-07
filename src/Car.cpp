@@ -78,7 +78,6 @@ void Car::makeProgress(const std::vector<std::shared_ptr<Machine>>& currentMachi
 
     for (int i = 1; i <= delayCount; i++)
     {
-        // MAYBE TRY TO LOCK CONSERVATION MUTEX HERE
         while (_isFactoryWorking && std::any_of(currentMachines.begin(), currentMachines.end(), [](const auto& machine) {
             return machine->condition == 0;
         }))

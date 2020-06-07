@@ -6,9 +6,9 @@
 #include <iostream>
 
 static int helpFlag = 0;
-static int carsNumber = 20;
-static int scheduleInterval = 1000;
-static int collectInterval = 500;
+static int carsNumber = 3;
+static int scheduleInterval = 5000;
+static int collectInterval = 1000;
 static int refreshInterval = 200;
 
 
@@ -71,9 +71,9 @@ int main(int argc, char** argv)
         std::cout << "MULTITHREADED FACTORY | S02 PROJECT\n";
         std::cout << "KAMIL TUREK 2020\n\n";
         std::cout << "Optional arguments:\n";
-        std::cout << "\t-n, --ncars=NUM\t\t\t\tnumber of cars to be present in the factory\t\t(default: 20)\n";
-        std::cout << "\t-s, --schedule-interval=NUM\t\ttime in milliseconds between new car scheduling\t\t(default: 1000)\n";
-        std::cout << "\t-c, --collect-interval=NUM\t\ttime in milliseconds between completed cars collecting\t(default: 500)\n";
+        std::cout << "\t-n, --ncars=NUM\t\t\t\tnumber of cars to be scheduled each time\t\t(default: 3)\n";
+        std::cout << "\t-s, --schedule-interval=NUM\t\ttime in milliseconds between new car scheduling\t\t(default: 5000)\n";
+        std::cout << "\t-c, --collect-interval=NUM\t\ttime in milliseconds between completed cars collecting\t(default: 1000)\n";
         std::cout << "\t-r, --refresh-interval=NUM\t\ttime in milliseconds between view refreshing\t\t(default: 200)\n";
         return 0;
     }

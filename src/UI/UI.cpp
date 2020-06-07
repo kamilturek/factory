@@ -306,4 +306,6 @@ void UI::refreshHelpWindow()
     _helpWindow->printAt(51, 3, "   ");
     _helpWindow->printAt(41, 2, std::to_string(_factory->completedCars()));
     _helpWindow->printAt(43, 3, std::to_string(carsCount));
+    _helpWindow->printAt(70, 2, "NEXT CAR SCHEDULE:\t" + std::to_string(_factory->nextSchedule()) + "\tms   ");
+    _helpWindow->printAt(70, 3, "NEXT CAR PICKUP:\t\t" + std::to_string(_factory->nextCollect()) + "\tms   ");
 }

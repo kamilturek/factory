@@ -7,6 +7,8 @@
 
 Factory::Factory(int carsNumber, int scheduleInterval, int collectionInterval) :
     _carsNumber(carsNumber),
+    _scheduleTimestamp(std::chrono::system_clock::now()),
+    _collectTimestamp(std::chrono::system_clock::now()),
     _scheduleInterval(scheduleInterval),
     _collectionInterval(collectionInterval),
     _carScheduler(&Factory::scheduleCars, this),
@@ -109,18 +111,22 @@ void Factory::scheduleCars()
 {
     while (_isWorking)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(_scheduleInterval));
-
-        // CONSIDER USAGE OF CONDITION VARIABLE
-        std::lock_guard<std::mutex> lock(carsMutex);
-        if (_cars.size() < static_cast<std::size_t>(_carsNumber))
         {
-            const auto lineNumber = static_cast<std::size_t>(_random.randomInt(0, Config::linesCount - 1));
-            const Line& line = _lines.at(lineNumber);
-            const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
-
-            _cars.push_back(std::make_shared<Car>(line, color, _isWorking));
+            std::lock_guard<std::mutex> lock(carsMutex);
+            _scheduleTimestamp = std::chrono::system_clock::now();
+            if (_cars.size() < 35)
+            {
+                for (int i = 0; i < _carsNumber; i++)
+                {
+                    const auto lineNumber = static_cast<std::size_t>(_random.randomInt(0, Config::linesCount - 1));
+                    const Line& line = _lines.at(lineNumber);
+                    const int color = _random.randomInt(COLOR_RED, COLOR_CYAN);
+        
+                    _cars.push_back(std::make_shared<Car>(line, color, _isWorking));
+                }
+            }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(_scheduleInterval));
     }
 }
 
@@ -128,10 +134,11 @@ void Factory::collectCars()
 {
     while (_isWorking)
     {
+        // HERE USE CONDITION VARIABLE
         std::this_thread::sleep_for(std::chrono::milliseconds(_collectionInterval));
 
-        // CONSIDER USAGE OF CONDITION VARIABLE
         std::lock_guard<std::mutex> lock(carsMutex);
+        _collectTimestamp = std::chrono::system_clock::now();
         const auto completedBegin = std::remove_if(_cars.begin(), _cars.end(), [](const auto& car) { return car->state() == State::FINISHED; });
         _completedCars += static_cast<int>(std::distance(completedBegin, _cars.end()));
         _cars.erase(completedBegin, _cars.end());
@@ -152,4 +159,14 @@ void Factory::inspectMachines()
                 if (machine->condition == 0)
                     _brokenMachines->push(machine);
     }
+}
+
+int Factory::nextSchedule() const
+{
+    return _scheduleInterval - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _scheduleTimestamp).count();
+}
+
+int Factory::nextCollect() const
+{
+    return _collectionInterval - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _collectTimestamp).count();
 }

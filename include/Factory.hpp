@@ -22,6 +22,9 @@ public:
     const std::vector<std::shared_ptr<Conservator>>& conservators() const;
     const std::array<Line, Config::linesCount>& getLines() const;
 
+    int nextSchedule() const;
+    int nextCollect() const;
+
 
 private:
     const int _carsNumber;
@@ -42,6 +45,9 @@ private:
     std::vector<std::shared_ptr<Car>> _cars;
     std::vector<std::shared_ptr<Conservator>> _conservators;
     std::shared_ptr<SafeQueue<std::shared_ptr<Machine>>> _brokenMachines;
+
+    std::chrono::time_point<std::chrono::system_clock> _scheduleTimestamp;
+    std::chrono::time_point<std::chrono::system_clock> _collectTimestamp;
 
     void setupLines();
     void setupBrokenMachinesQueue();
