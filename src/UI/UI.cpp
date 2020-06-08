@@ -13,6 +13,8 @@ UI::UI(std::shared_ptr<Factory> factory, const int refreshInterval) :
 
     initializeMainWindow();
     initializeHelpWindow();
+    initializeConservatorsWindow();
+    initializeInspectorsWindow();
     initializeColors();
 
     initializeDoubleMachineFigures();
@@ -31,7 +33,7 @@ UI::~UI()
 
 void UI::watchKeyboard()
 {
-    while (_factory->isWorking())
+    while (_factory->state()->isWorking)
     {
         int keyPressed = wgetch(stdscr);
 
@@ -39,7 +41,7 @@ void UI::watchKeyboard()
         {
         // ESCAPE KEY
         case 27:
-            _factory->setWorking(false);
+            _factory->stop();
             break;
         }
     }
@@ -79,6 +81,28 @@ void UI::initializeHelpWindow()
     _helpWindow->printAt(30, 3, "IN PROGRESS: ");
 }
 
+void UI::initializeConservatorsWindow()
+{
+    constexpr int width = 48;
+    constexpr int height = 5;
+    constexpr int x = 187;
+    constexpr int y = 46;
+
+    _conservatorsWindow = std::make_unique<Window>(width, height, x, y);
+    _conservatorsWindow->printAt(5, 0 ,"CONSERVATORS");
+}
+
+void UI::initializeInspectorsWindow()
+{
+    constexpr int width = 48;
+    constexpr int height = 5;
+    constexpr int x = 138;
+    constexpr int y = 46;
+
+    _inspectorsWindow = std::make_unique<Window>(width, height, x, y);
+    _inspectorsWindow->printAt(5, 0 ,"INSPECTORS");
+}
+
 void UI::initializeColors()
 {
     init_pair(1, COLOR_RED, COLOR_BLACK);
@@ -99,6 +123,9 @@ void UI::initializeDoubleMachineFigures()
         constexpr int x = 20;
         const int y = offset + i * spacing;
 
+        const auto machine = _factory->getLines().at(static_cast<std::size_t>(i)).first;
+        machine->x = x;
+        machine->y = y;
         doubleMachineFigures.push_back(std::make_shared<DoubleMachineFigure>(x, y, i + 1));
     }
 }
@@ -112,6 +139,9 @@ void UI::initializeSingleMachineFigures()
         constexpr int x = 110;
         const int y = offset + i * spacing;
 
+        const auto machine = _factory->getLines().at(static_cast<std::size_t>(i)).second;
+        machine->x = x;
+        machine->y = y;
         singleMachineFigures.push_back(std::make_unique<SingleMachineFigure>(x, y, i + 1));
     }
 }
@@ -126,19 +156,29 @@ void UI::initializeHalfMachineFigures()
         const int y = offset + i * spacing;
         bool hasStandBelow = true;
 
+        std::shared_ptr<Machine> machine;
         if (i == Config::linesCount)
+        {
             hasStandBelow = false;
+            machine = _factory->getLines().at(static_cast<std::size_t>(i) - 1).thirdTwo;
+        }
+        else
+            machine = _factory->getLines().at(static_cast<std::size_t>(i)).thirdOne;
 
+        machine->x = x;
+        machine->y = y;
         halfMachineFigures.push_back(std::make_shared<HalfMachineFigure>(x, y, hasStandBelow, i + 1));
     }
 }
 
 void UI::refreshView()
 {
-    while (_factory->isWorking())
+    while (_factory->state()->isWorking)
     {
         refreshMachines();
         refreshCars();
+        refreshConservators();
+        refreshInspectors();
         refreshHelpWindow();
         refresh();
         std::this_thread::sleep_for(std::chrono::milliseconds(_refreshInterval));
@@ -147,17 +187,41 @@ void UI::refreshView()
 
 void UI::refreshMachines()
 {
-    for (const auto& machine : doubleMachineFigures)
+    for (std::size_t i = 0; i < doubleMachineFigures.size(); i++)
     {
-        machine->setUpperStandTaken(false);
-        machine->redraw();
+        const auto& machine = _factory->getLines().at(i).first;
+        const auto& figure = doubleMachineFigures.at(i);
+        figure->setUpperStandTaken(false);
+        figure->redraw();
+        mvprintw(figure->y() + 5, figure->x() + 15, std::to_string(machine->condition).c_str());
+        printw("%%");
     }
 
-    for (const auto& machine : singleMachineFigures)
-        machine->redraw();
+    for (std::size_t i = 0; i < singleMachineFigures.size(); i++)
+    {
+        const auto& machine = _factory->getLines().at(i).second;
+        const auto& figure = singleMachineFigures.at(i);
+        figure->redraw();
+        mvprintw(figure->y() + 1, figure->x() + 15, std::to_string(machine->condition).c_str());
+        printw("%%");
+    }
 
-    for (const auto& machine : halfMachineFigures)
-        machine->redraw();
+    for (std::size_t i = 0; i < halfMachineFigures.size(); i++)
+    {
+        std::shared_ptr<HalfMachine> machine;
+        std::shared_ptr<HalfMachineFigure> figure;
+
+        if (i == halfMachineFigures.size() - 1)
+            machine = _factory->getLines().at(i - 1).thirdTwo;
+        else
+            machine = _factory->getLines().at(i).thirdOne;
+
+        figure = halfMachineFigures.at(i);
+
+        figure->redraw();
+        mvprintw(figure->y() + 1, figure->x() + 15, std::to_string(machine->condition).c_str());
+        printw("%%");
+    }
 }
 
 void UI::refreshCars()
@@ -165,9 +229,9 @@ void UI::refreshCars()
     std::array<int, Config::linesCount> awaitingCarsPerLine;
     awaitingCarsPerLine.fill(0);
 
-    std::lock_guard<std::mutex> lock(_factory->carsMutex);
+    std::lock_guard<std::mutex> lock(_factory->cars()->mutex);
 
-    for (const auto car : _factory->cars())
+    for (const auto car : *_factory->cars())
     {
         const auto figure = car->figure();
 
@@ -230,17 +294,42 @@ void UI::refreshCars()
     }
 }
 
+void UI::refreshConservators()
+{
+    for (const auto conservator : _factory->conservators())
+    {
+        if (conservator->figure()->x() != conservator->x() && conservator->figure()->y() != conservator->y())
+        {
+            conservator->figure()->moveTo(conservator->x(), conservator->y());
+        }
+        conservator->figure()->redraw();
+    }
+}
+
+void UI::refreshInspectors()
+{
+    for (const auto inspector : _factory->inspectors())
+    {
+        if (inspector->figure()->x() != inspector->x() && inspector->figure()->y() != inspector->y())
+        {
+            inspector->figure()->moveTo(inspector->x(), inspector->y());
+        }
+        inspector->figure()->redraw();
+    }
+}
+
 void UI::refreshHelpWindow()
 {
     std::size_t carsCount;
 
     {
-        std::lock_guard<std::mutex> lock(_factory->carsMutex);
-        carsCount = _factory->cars().size();
+        std::lock_guard<std::mutex> lock(_factory->cars()->mutex);
+        carsCount = _factory->cars()->size();
     }
 
     _helpWindow->printAt(46, 2, "   ");
     _helpWindow->printAt(51, 3, "   ");
     _helpWindow->printAt(41, 2, std::to_string(_factory->completedCars()));
     _helpWindow->printAt(43, 3, std::to_string(carsCount));
+    _helpWindow->printAt(70, 2, "NEXT CAR SCHEDULE: " + std::to_string(_factory->nextSchedule()) + "\tms   ");
 }

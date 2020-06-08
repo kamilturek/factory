@@ -13,5 +13,4 @@ public:
     void update() override;
 
     std::vector<std::unique_ptr<IWindow>> _windows;
-protected:
 };
